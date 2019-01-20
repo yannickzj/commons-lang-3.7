@@ -44,51 +44,18 @@ public class ReflectionToStringBuilderExcludeNullValuesTest {
     private final TestFixture BOTH_NULL = new TestFixture(null, null);
 
     @Test
-    public void test_NonExclude(){
-        //normal case=
-        String toString = ReflectionToStringBuilder.toString(BOTH_NON_NULL, null, false, false, false, null);
-        assertTrue(toString.contains(INTEGER_FIELD_NAME));
-        assertTrue(toString.contains(STRING_FIELD_NAME));
-
-        //make one null
-        toString = ReflectionToStringBuilder.toString(FIRST_NULL, null, false, false, false, null);
-        assertTrue(toString.contains(INTEGER_FIELD_NAME));
-        assertTrue(toString.contains(STRING_FIELD_NAME));
-
-        //other one null
-        toString = ReflectionToStringBuilder.toString(SECOND_NULL, null, false, false, false, null);
-        assertTrue(toString.contains(INTEGER_FIELD_NAME));
-        assertTrue(toString.contains(STRING_FIELD_NAME));
-
-        //make the both null
-        toString = ReflectionToStringBuilder.toString(BOTH_NULL, null, false, false, false, null);
-        assertTrue(toString.contains(INTEGER_FIELD_NAME));
-        assertTrue(toString.contains(STRING_FIELD_NAME));
-    }
+	public void test_NonExclude() {
+		this.reflectionToStringBuilderExcludeNullValuesTestTemplate(
+				new ReflectionToStringBuilderExcludeNullValuesTestTest_NonExcludeAdapterImpl(), false, false, false,
+				false);
+	}
 
     @Test
-    public void test_excludeNull(){
-
-        //test normal case
-        String toString = ReflectionToStringBuilder.toString(BOTH_NON_NULL, null, false, false, true, null);
-        assertTrue(toString.contains(INTEGER_FIELD_NAME));
-        assertTrue(toString.contains(STRING_FIELD_NAME));
-
-        //make one null
-        toString = ReflectionToStringBuilder.toString(FIRST_NULL, null, false, false, true, null);
-        assertFalse(toString.contains(INTEGER_FIELD_NAME));
-        assertTrue(toString.contains(STRING_FIELD_NAME));
-
-        //other one null
-        toString = ReflectionToStringBuilder.toString(SECOND_NULL, null, false, false, true, null);
-        assertTrue(toString.contains(INTEGER_FIELD_NAME));
-        assertFalse(toString.contains(STRING_FIELD_NAME));
-
-        //both null
-        toString = ReflectionToStringBuilder.toString(BOTH_NULL, null, false, false, true, null);
-        assertFalse(toString.contains(INTEGER_FIELD_NAME));
-        assertFalse(toString.contains(STRING_FIELD_NAME));
-    }
+	public void test_excludeNull() {
+		this.reflectionToStringBuilderExcludeNullValuesTestTemplate(
+				new ReflectionToStringBuilderExcludeNullValuesTestTest_excludeNullAdapterImpl(), true, true, true,
+				true);
+	}
 
     @Test
     public void test_ConstructorOption(){
@@ -160,5 +127,40 @@ public class ReflectionToStringBuilderExcludeNullValuesTest {
         assertFalse(toString.contains(STRING_FIELD_NAME));
         assertFalse(toString.contains(INTEGER_FIELD_NAME));
     }
+
+	public void reflectionToStringBuilderExcludeNullValuesTestTemplate(
+			ReflectionToStringBuilderExcludeNullValuesTestAdapter adapter, boolean b1, boolean b2, boolean b3,
+			boolean b4) {
+		String toString = ReflectionToStringBuilder.toString(BOTH_NON_NULL, null, false, false, b1, null);
+		assertTrue(toString.contains(INTEGER_FIELD_NAME));
+		assertTrue(toString.contains(STRING_FIELD_NAME));
+		toString = ReflectionToStringBuilder.toString(FIRST_NULL, null, false, false, b2, null);
+		adapter.assertAction(toString.contains(INTEGER_FIELD_NAME));
+		assertTrue(toString.contains(STRING_FIELD_NAME));
+		toString = ReflectionToStringBuilder.toString(SECOND_NULL, null, false, false, b3, null);
+		assertTrue(toString.contains(INTEGER_FIELD_NAME));
+		adapter.assertAction(toString.contains(STRING_FIELD_NAME));
+		toString = ReflectionToStringBuilder.toString(BOTH_NULL, null, false, false, b4, null);
+		adapter.assertAction(toString.contains(INTEGER_FIELD_NAME));
+		adapter.assertAction(toString.contains(STRING_FIELD_NAME));
+	}
+
+	interface ReflectionToStringBuilderExcludeNullValuesTestAdapter {
+		void assertAction(boolean b1);
+	}
+
+	class ReflectionToStringBuilderExcludeNullValuesTestTest_NonExcludeAdapterImpl
+			implements ReflectionToStringBuilderExcludeNullValuesTestAdapter {
+		public void assertAction(boolean b1) {
+			assertTrue(b1);
+		}
+	}
+
+	class ReflectionToStringBuilderExcludeNullValuesTestTest_excludeNullAdapterImpl
+			implements ReflectionToStringBuilderExcludeNullValuesTestAdapter {
+		public void assertAction(boolean b1) {
+			assertFalse(b1);
+		}
+	}
 
 }

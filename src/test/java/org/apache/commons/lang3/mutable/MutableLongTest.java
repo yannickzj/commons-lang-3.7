@@ -16,6 +16,8 @@
  */
 package org.apache.commons.lang3.mutable;
 
+import java.lang.String;
+import java.lang.Number;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -92,25 +94,16 @@ public class MutableLongTest {
     }
 
     @Test
-    public void testHashCode() {
-        final MutableLong mutNumA = new MutableLong(0);
-        final MutableLong mutNumB = new MutableLong(0);
-        final MutableLong mutNumC = new MutableLong(1);
-
-        assertTrue(mutNumA.hashCode() == mutNumA.hashCode());
-        assertTrue(mutNumA.hashCode() == mutNumB.hashCode());
-        assertFalse(mutNumA.hashCode() == mutNumC.hashCode());
-        assertTrue(mutNumA.hashCode() == Long.valueOf(0).hashCode());
-    }
+	public void testHashCode() throws Exception {
+		MutableTestTestHashCodeTemplate.mutableTestTestHashCodeTemplate(new MutableLongTestTestHashCodeAdapterImpl(),
+				MutableLong.class, long.class);
+	}
 
     @Test
-    public void testCompareTo() {
-        final MutableLong mutNum = new MutableLong(0);
-
-        assertEquals(0, mutNum.compareTo(new MutableLong(0)));
-        assertEquals(+1, mutNum.compareTo(new MutableLong(-1)));
-        assertEquals(-1, mutNum.compareTo(new MutableLong(1)));
-    }
+	public void testCompareTo() throws Exception {
+		MutableTestTestCompareToTemplate.mutableTestTestCompareToTemplate(new MutableLongTestTestCompareToAdapterImpl(),
+				MutableLong.class, long.class);
+	}
 
     @Test(expected=NullPointerException.class)
     public void testCompareToNull() {
@@ -267,10 +260,35 @@ public class MutableLongTest {
     }
 
     @Test
-    public void testToString() {
-        assertEquals("0", new MutableLong(0).toString());
-        assertEquals("10", new MutableLong(10).toString());
-        assertEquals("-123", new MutableLong(-123).toString());
-    }
+	public void testToString() throws Exception {
+		MutableTestTestToStringTemplate.mutableTestTestToStringTemplate(new MutableLongTestTestToStringAdapterImpl(),
+				MutableLong.class, long.class);
+	}
+
+	class MutableLongTestTestHashCodeAdapterImpl implements MutableTestTestHashCodeAdapter<MutableLong> {
+		public int hashCode(MutableLong mutNumA) {
+			return mutNumA.hashCode();
+		}
+
+		public Number valueOf(int i1) {
+			return Long.valueOf(i1);
+		}
+
+		public int hashCode1(Number number1) {
+			return number1.hashCode();
+		}
+	}
+
+	class MutableLongTestTestCompareToAdapterImpl implements MutableTestTestCompareToAdapter<MutableLong> {
+		public int compareTo(MutableLong mutNum, MutableLong tMutableNumber1) {
+			return mutNum.compareTo(tMutableNumber1);
+		}
+	}
+
+	class MutableLongTestTestToStringAdapterImpl implements MutableTestTestToStringAdapter<MutableLong> {
+		public String toString(MutableLong tMutableNumber1) {
+			return tMutableNumber1.toString();
+		}
+	}
 
 }

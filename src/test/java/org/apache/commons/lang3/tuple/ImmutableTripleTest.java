@@ -121,15 +121,9 @@ public class ImmutableTripleTest {
     }
 
     @Test
-    public void testToString() throws Exception {
-        assertEquals("(null,null,null)", ImmutableTriple.of(null, null, null).toString());
-        assertEquals("(null,two,null)", ImmutableTriple.of(null, "two", null).toString());
-        assertEquals("(one,null,null)", ImmutableTriple.of("one", null, null).toString());
-        assertEquals("(one,two,null)", ImmutableTriple.of("one", "two", null).toString());
-        assertEquals("(null,two,three)", ImmutableTriple.of(null, "two", "three").toString());
-        assertEquals("(one,null,three)", ImmutableTriple.of("one", null, "three").toString());
-        assertEquals("(one,two,three)", MutableTriple.of("one", "two", "three").toString());
-    }
+	public void testToString() throws Exception {
+		TripleTestTestToStringTemplate.tripleTestTestToStringTemplate();
+	}
 
     @Test
     @SuppressWarnings("unchecked")

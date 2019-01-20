@@ -16,6 +16,7 @@
  */
 package org.apache.commons.lang3;
 
+import java.lang.String;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
@@ -74,36 +75,14 @@ public class StringUtilsSubstringTest  {
     }
 
     @Test
-    public void testLeft_String() {
-        assertSame(null, StringUtils.left(null, -1));
-        assertSame(null, StringUtils.left(null, 0));
-        assertSame(null, StringUtils.left(null, 2));
-
-        assertEquals("", StringUtils.left("", -1));
-        assertEquals("", StringUtils.left("", 0));
-        assertEquals("", StringUtils.left("", 2));
-
-        assertEquals("", StringUtils.left(FOOBAR, -1));
-        assertEquals("", StringUtils.left(FOOBAR, 0));
-        assertEquals(FOO, StringUtils.left(FOOBAR, 3));
-        assertSame(FOOBAR, StringUtils.left(FOOBAR, 80));
-    }
+	public void testLeft_String() {
+		this.stringUtilsSubstringTestTestStringTemplate(new StringUtilsSubstringTestTestLeft_StringAdapterImpl(), FOO);
+	}
 
     @Test
-    public void testRight_String() {
-        assertSame(null, StringUtils.right(null, -1));
-        assertSame(null, StringUtils.right(null, 0));
-        assertSame(null, StringUtils.right(null, 2));
-
-        assertEquals("", StringUtils.right("", -1));
-        assertEquals("", StringUtils.right("", 0));
-        assertEquals("", StringUtils.right("", 2));
-
-        assertEquals("", StringUtils.right(FOOBAR, -1));
-        assertEquals("", StringUtils.right(FOOBAR, 0));
-        assertEquals(BAR, StringUtils.right(FOOBAR, 3));
-        assertSame(FOOBAR, StringUtils.right(FOOBAR, 80));
-    }
+	public void testRight_String() {
+		this.stringUtilsSubstringTestTestStringTemplate(new StringUtilsSubstringTestTestRight_StringAdapterImpl(), BAR);
+	}
 
     @Test
     public void testMid_String() {
@@ -327,5 +306,35 @@ public class StringUtilsSubstringTest  {
         assertEquals(6, StringUtils.countMatches("one long someone sentence of one", 'o'));
         assertEquals(4, StringUtils.countMatches("oooooooooooo", "ooo"));
     }
+
+	public void stringUtilsSubstringTestTestStringTemplate(StringUtilsSubstringTestTestStringAdapter adapter,
+			String string1) {
+		assertSame(null, adapter.action1(null, -1));
+		assertSame(null, adapter.action1(null, 0));
+		assertSame(null, adapter.action1(null, 2));
+		assertEquals("", adapter.action1("", -1));
+		assertEquals("", adapter.action1("", 0));
+		assertEquals("", adapter.action1("", 2));
+		assertEquals("", adapter.action1(FOOBAR, -1));
+		assertEquals("", adapter.action1(FOOBAR, 0));
+		assertEquals(string1, adapter.action1(FOOBAR, 3));
+		assertSame(FOOBAR, adapter.action1(FOOBAR, 80));
+	}
+
+	interface StringUtilsSubstringTestTestStringAdapter {
+		String action1(String string1, int i1);
+	}
+
+	class StringUtilsSubstringTestTestLeft_StringAdapterImpl implements StringUtilsSubstringTestTestStringAdapter {
+		public String action1(String string1, int i1) {
+			return StringUtils.left(string1, i1);
+		}
+	}
+
+	class StringUtilsSubstringTestTestRight_StringAdapterImpl implements StringUtilsSubstringTestTestStringAdapter {
+		public String action1(String string1, int i1) {
+			return StringUtils.right(string1, i1);
+		}
+	}
 
 }

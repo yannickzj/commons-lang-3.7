@@ -16,6 +16,7 @@
  */
 package org.apache.commons.lang3.concurrent;
 
+import java.lang.Object;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
@@ -322,23 +323,13 @@ public class ConcurrentUtilsTest {
     }
 
     /**
-     * Tests a successful initialize() operation.
-     *
-     * @throws org.apache.commons.lang3.concurrent.ConcurrentException so we don't have to catch it
-     */
-    @Test
-    public void testInitialize() throws ConcurrentException {
-        @SuppressWarnings("unchecked")
-        final
-        ConcurrentInitializer<Object> init = EasyMock
-                .createMock(ConcurrentInitializer.class);
-        final Object result = new Object();
-        EasyMock.expect(init.get()).andReturn(result);
-        EasyMock.replay(init);
-        assertSame("Wrong result object", result, ConcurrentUtils
-                .initialize(init));
-        EasyMock.verify(init);
-    }
+	 * Tests a successful initialize() operation.
+	 * @throws org.apache.commons.lang3.concurrent.ConcurrentException  so we don't have to catch it
+	 */
+	@Test
+	public void testInitialize() throws Exception {
+		this.concurrentUtilsTestTestInitializeTemplate(new ConcurrentUtilsTestTestInitializeAdapterImpl());
+	}
 
     /**
      * Tests initializeUnchecked() for a null argument.
@@ -357,23 +348,13 @@ public class ConcurrentUtilsTest {
     }
 
     /**
-     * Tests a successful initializeUnchecked() operation.
-     *
-     * @throws org.apache.commons.lang3.concurrent.ConcurrentException so we don't have to catch it
-     */
-    @Test
-    public void testInitializeUnchecked() throws ConcurrentException {
-        @SuppressWarnings("unchecked")
-        final
-        ConcurrentInitializer<Object> init = EasyMock
-                .createMock(ConcurrentInitializer.class);
-        final Object result = new Object();
-        EasyMock.expect(init.get()).andReturn(result);
-        EasyMock.replay(init);
-        assertSame("Wrong result object", result, ConcurrentUtils
-                .initializeUnchecked(init));
-        EasyMock.verify(init);
-    }
+	 * Tests a successful initializeUnchecked() operation.
+	 * @throws org.apache.commons.lang3.concurrent.ConcurrentException  so we don't have to catch it
+	 */
+	@Test
+	public void testInitializeUnchecked() throws Exception {
+		this.concurrentUtilsTestTestInitializeTemplate(new ConcurrentUtilsTestTestInitializeUncheckedAdapterImpl());
+	}
 
     /**
      * Tests whether exceptions are correctly handled by initializeUnchecked().
@@ -587,4 +568,31 @@ public class ConcurrentUtilsTest {
         }
         EasyMock.verify(init);
     }
+
+	public void concurrentUtilsTestTestInitializeTemplate(ConcurrentUtilsTestTestInitializeAdapter adapter)
+			throws Exception {
+		@SuppressWarnings("unchecked")
+		final ConcurrentInitializer<Object> init = EasyMock.createMock(ConcurrentInitializer.class);
+		final Object result = new Object();
+		EasyMock.expect(init.get()).andReturn(result);
+		EasyMock.replay(init);
+		assertSame("Wrong result object", result, adapter.initialize(init));
+		EasyMock.verify(init);
+	}
+
+	interface ConcurrentUtilsTestTestInitializeAdapter {
+		Object initialize(ConcurrentInitializer<Object> concurrentInitializerObject1) throws ConcurrentException;
+	}
+
+	class ConcurrentUtilsTestTestInitializeAdapterImpl implements ConcurrentUtilsTestTestInitializeAdapter {
+		public Object initialize(ConcurrentInitializer<Object> init) throws ConcurrentException {
+			return ConcurrentUtils.initialize(init);
+		}
+	}
+
+	class ConcurrentUtilsTestTestInitializeUncheckedAdapterImpl implements ConcurrentUtilsTestTestInitializeAdapter {
+		public Object initialize(ConcurrentInitializer<Object> init) {
+			return ConcurrentUtils.initializeUnchecked(init);
+		}
+	}
 }

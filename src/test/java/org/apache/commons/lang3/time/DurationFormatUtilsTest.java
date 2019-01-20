@@ -406,19 +406,16 @@ public class DurationFormatUtilsTest {
     }
 
 
-    // http://issues.apache.org/bugzilla/show_bug.cgi?id=38401
     @Test
-    public void testBugzilla38401() {
-        assertEqualDuration( "0000/00/30 16:00:00 000", new int[] { 2006, 0, 26, 18, 47, 34 },
-                             new int[] { 2006, 1, 26, 10, 47, 34 }, "yyyy/MM/dd HH:mm:ss SSS");
-    }
+	public void testBugzilla38401() {
+		this.durationFormatUtilsTestTestTemplate("0000/00/30 16:00:00 000", 2006, 0, 26, 18, 47, 34, 1, 26, 10, 47, 34,
+				"yyyy/MM/dd HH:mm:ss SSS");
+	}
 
-    // https://issues.apache.org/jira/browse/LANG-281
     @Test
-    public void testJiraLang281() {
-        assertEqualDuration( "09", new int[] { 2005, 11, 31, 0, 0, 0 },
-                             new int[] { 2006, 9, 6, 0, 0, 0 }, "MM");
-    }
+	public void testJiraLang281() {
+		this.durationFormatUtilsTestTestTemplate("09", 2005, 11, 31, 0, 0, 0, 9, 6, 0, 0, 0, "MM");
+	}
 
     @Test
     public void testLANG815() {
@@ -627,5 +624,11 @@ public class DurationFormatUtilsTest {
             assertEquals(message, expected, result);
         }
     }
+
+	public void durationFormatUtilsTestTestTemplate(String string1, int i1, int i2, int i3, int i4, int i5, int i6,
+			int i7, int i8, int i9, int i10, int i11, String string2) {
+		assertEqualDuration(string1, new int[] { i1, i2, i3, i4, i5, i6 }, new int[] { 2006, i7, i8, i9, i10, i11 },
+				string2);
+	}
 
 }

@@ -17,6 +17,7 @@
 
 package org.apache.commons.lang3.text;
 
+import java.lang.String;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
@@ -466,68 +467,20 @@ public class StrSubstitutorTest {
     }
 
     /**
-     * Tests get set.
-     */
-    @Test
-    public void testGetSetPrefix() {
-        final StrSubstitutor sub = new StrSubstitutor();
-        assertTrue(sub.getVariablePrefixMatcher() instanceof StrMatcher.StringMatcher);
-        sub.setVariablePrefix('<');
-        assertTrue(sub.getVariablePrefixMatcher() instanceof StrMatcher.CharMatcher);
-
-        sub.setVariablePrefix("<<");
-        assertTrue(sub.getVariablePrefixMatcher() instanceof StrMatcher.StringMatcher);
-        try {
-            sub.setVariablePrefix(null);
-            fail();
-        } catch (final IllegalArgumentException ex) {
-            // expected
-        }
-        assertTrue(sub.getVariablePrefixMatcher() instanceof StrMatcher.StringMatcher);
-
-        final StrMatcher matcher = StrMatcher.commaMatcher();
-        sub.setVariablePrefixMatcher(matcher);
-        assertSame(matcher, sub.getVariablePrefixMatcher());
-        try {
-            sub.setVariablePrefixMatcher(null);
-            fail();
-        } catch (final IllegalArgumentException ex) {
-            // expected
-        }
-        assertSame(matcher, sub.getVariablePrefixMatcher());
-    }
+	 * Tests get set.
+	 */
+	@Test
+	public void testGetSetPrefix() {
+		this.strSubstitutorTestTestGetSetTemplate(new StrSubstitutorTestTestGetSetPrefixAdapterImpl());
+	}
 
     /**
-     * Tests get set.
-     */
-    @Test
-    public void testGetSetSuffix() {
-        final StrSubstitutor sub = new StrSubstitutor();
-        assertTrue(sub.getVariableSuffixMatcher() instanceof StrMatcher.StringMatcher);
-        sub.setVariableSuffix('<');
-        assertTrue(sub.getVariableSuffixMatcher() instanceof StrMatcher.CharMatcher);
-
-        sub.setVariableSuffix("<<");
-        assertTrue(sub.getVariableSuffixMatcher() instanceof StrMatcher.StringMatcher);
-        try {
-            sub.setVariableSuffix(null);
-            fail();
-        } catch (final IllegalArgumentException ex) {
-            // expected
-        }
-        assertTrue(sub.getVariableSuffixMatcher() instanceof StrMatcher.StringMatcher);
-
-        final StrMatcher matcher = StrMatcher.commaMatcher();
-        sub.setVariableSuffixMatcher(matcher);
-        assertSame(matcher, sub.getVariableSuffixMatcher());
-        try {
-            sub.setVariableSuffixMatcher(null);
-            fail();
-        } catch (final IllegalArgumentException ex) {
-            // expected
-        }
-        assertSame(matcher, sub.getVariableSuffixMatcher());
-    }
+	 * Tests get set.
+	 */
+	@Test
+	public void testGetSetSuffix() {
+		this.strSubstitutorTestTestGetSetTemplate(new StrSubstitutorTestTestGetSetSuffixAdapterImpl());
+	}
 
     /**
      * Tests get set.
@@ -737,5 +690,75 @@ public class StrSubstitutorTest {
             assertEquals(replaceTemplate, bld.toString());
         }
     }
+
+	public void strSubstitutorTestTestGetSetTemplate(StrSubstitutorTestTestGetSetAdapter adapter) {
+		final StrSubstitutor sub = new StrSubstitutor();
+		assertTrue(adapter.getVariableMatcher(sub) instanceof StrMatcher.StringMatcher);
+		adapter.setVariable(sub, '<');
+		assertTrue(adapter.getVariableMatcher(sub) instanceof StrMatcher.CharMatcher);
+		adapter.setVariable1(sub, "<<");
+		assertTrue(adapter.getVariableMatcher(sub) instanceof StrMatcher.StringMatcher);
+		try {
+			adapter.setVariable1(sub, null);
+			fail();
+		} catch (final IllegalArgumentException ex) {
+		}
+		assertTrue(adapter.getVariableMatcher(sub) instanceof StrMatcher.StringMatcher);
+		final StrMatcher matcher = StrMatcher.commaMatcher();
+		adapter.setVariableMatcher(sub, matcher);
+		assertSame(matcher, adapter.getVariableMatcher(sub));
+		try {
+			adapter.setVariableMatcher(sub, null);
+			fail();
+		} catch (final IllegalArgumentException ex) {
+		}
+		assertSame(matcher, adapter.getVariableMatcher(sub));
+	}
+
+	interface StrSubstitutorTestTestGetSetAdapter {
+		StrMatcher getVariableMatcher(StrSubstitutor strSubstitutor1);
+
+		StrSubstitutor setVariable(StrSubstitutor strSubstitutor1, char c1);
+
+		StrSubstitutor setVariable1(StrSubstitutor strSubstitutor1, String string1);
+
+		StrSubstitutor setVariableMatcher(StrSubstitutor strSubstitutor1, StrMatcher strMatcher1);
+	}
+
+	class StrSubstitutorTestTestGetSetPrefixAdapterImpl implements StrSubstitutorTestTestGetSetAdapter {
+		public StrMatcher getVariableMatcher(StrSubstitutor sub) {
+			return sub.getVariablePrefixMatcher();
+		}
+
+		public StrSubstitutor setVariable(StrSubstitutor sub, char c1) {
+			return sub.setVariablePrefix(c1);
+		}
+
+		public StrSubstitutor setVariable1(StrSubstitutor sub, String string1) {
+			return sub.setVariablePrefix(string1);
+		}
+
+		public StrSubstitutor setVariableMatcher(StrSubstitutor sub, StrMatcher matcher) {
+			return sub.setVariablePrefixMatcher(matcher);
+		}
+	}
+
+	class StrSubstitutorTestTestGetSetSuffixAdapterImpl implements StrSubstitutorTestTestGetSetAdapter {
+		public StrMatcher getVariableMatcher(StrSubstitutor sub) {
+			return sub.getVariableSuffixMatcher();
+		}
+
+		public StrSubstitutor setVariable(StrSubstitutor sub, char c1) {
+			return sub.setVariableSuffix(c1);
+		}
+
+		public StrSubstitutor setVariable1(StrSubstitutor sub, String string1) {
+			return sub.setVariableSuffix(string1);
+		}
+
+		public StrSubstitutor setVariableMatcher(StrSubstitutor sub, StrMatcher matcher) {
+			return sub.setVariableSuffixMatcher(matcher);
+		}
+	}
 
 }

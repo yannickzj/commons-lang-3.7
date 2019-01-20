@@ -32,56 +32,36 @@ public class BitFieldTest  {
     private static final BitField bf_zero = new BitField(0);
 
     /**
-     * test the getValue() method
-     */
-    @Test
-    public void testGetValue() {
-        assertEquals(bf_multi.getValue(-1), 127);
-        assertEquals(bf_multi.getValue(0), 0);
-        assertEquals(bf_single.getValue(-1), 1);
-        assertEquals(bf_single.getValue(0), 0);
-        assertEquals(bf_zero.getValue(-1), 0);
-        assertEquals(bf_zero.getValue(0), 0);
-    }
+	 * test the getValue() method
+	 */
+	@Test
+	public void testGetValue() {
+		this.bitFieldTestTestGetValueTemplate(new BitFieldTestTestGetValueAdapterImpl(), 127, 1);
+	}
 
     /**
-     * test the getShortValue() method
-     */
-    @Test
-    public void testGetShortValue() {
-        assertEquals(bf_multi.getShortValue((short) - 1), (short) 127);
-        assertEquals(bf_multi.getShortValue((short) 0), (short) 0);
-        assertEquals(bf_single.getShortValue((short) - 1), (short) 1);
-        assertEquals(bf_single.getShortValue((short) 0), (short) 0);
-        assertEquals(bf_zero.getShortValue((short) -1), (short) 0);
-        assertEquals(bf_zero.getShortValue((short) 0), (short) 0);
-    }
+	 * test the getShortValue() method
+	 */
+	@Test
+	public void testGetShortValue() {
+		this.bitFieldTestTestGetShortValueTemplate(new BitFieldTestTestGetShortValueAdapterImpl(), 127, 1);
+	}
 
     /**
-     * test the getRawValue() method
-     */
-    @Test
-    public void testGetRawValue() {
-        assertEquals(bf_multi.getRawValue(-1), 0x3F80);
-        assertEquals(bf_multi.getRawValue(0), 0);
-        assertEquals(bf_single.getRawValue(-1), 0x4000);
-        assertEquals(bf_single.getRawValue(0), 0);
-        assertEquals(bf_zero.getRawValue(-1), 0);
-        assertEquals(bf_zero.getRawValue(0), 0);
-    }
+	 * test the getRawValue() method
+	 */
+	@Test
+	public void testGetRawValue() {
+		this.bitFieldTestTestGetValueTemplate(new BitFieldTestTestGetRawValueAdapterImpl(), 0x3F80, 0x4000);
+	}
 
     /**
-     * test the getShortRawValue() method
-     */
-    @Test
-    public void testGetShortRawValue() {
-        assertEquals(bf_multi.getShortRawValue((short) - 1), (short) 0x3F80);
-        assertEquals(bf_multi.getShortRawValue((short) 0), (short) 0);
-        assertEquals(bf_single.getShortRawValue((short) - 1), (short) 0x4000);
-        assertEquals(bf_single.getShortRawValue((short) 0), (short) 0);
-        assertEquals(bf_zero.getShortRawValue((short) -1), (short) 0);
-        assertEquals(bf_zero.getShortRawValue((short) 0), (short) 0);
-    }
+	 * test the getShortRawValue() method
+	 */
+	@Test
+	public void testGetShortRawValue() {
+		this.bitFieldTestTestGetShortValueTemplate(new BitFieldTestTestGetShortRawValueAdapterImpl(), 0x3F80, 0x4000);
+	}
 
     /**
      * test the isSet() method
@@ -201,14 +181,13 @@ public class BitFieldTest  {
     }
 
     /**
-     * test the clearShort() method
-     */
-    @Test
-    public void testClearShort() {
-        assertEquals(bf_multi.clearShort((short) - 1), (short) 0xC07F);
-        assertEquals(bf_single.clearShort((short) - 1), (short) 0xBFFF);
-        assertEquals(bf_zero.clearShort((short) -1), (short) 0xFFFF);
-    }
+	 * test the clearShort() method
+	 */
+	@Test
+	public void testClearShort() {
+		this.bitFieldTestTestShortTemplate(new BitFieldTestTestClearShortAdapterImpl(), -1, 0xC07F, -1, 0xBFFF, -1,
+				0xFFFF);
+	}
 
     /**
      * test the set() method
@@ -221,14 +200,12 @@ public class BitFieldTest  {
     }
 
     /**
-     * test the setShort() method
-     */
-    @Test
-    public void testSetShort() {
-        assertEquals(bf_multi.setShort((short) 0), (short) 0x3F80);
-        assertEquals(bf_single.setShort((short) 0), (short) 0x4000);
-        assertEquals(bf_zero.setShort((short) 0), (short) 0);
-    }
+	 * test the setShort() method
+	 */
+	@Test
+	public void testSetShort() {
+		this.bitFieldTestTestShortTemplate(new BitFieldTestTestSetShortAdapterImpl(), 0, 0x3F80, 0, 0x4000, 0, 0);
+	}
 
     /**
      * test the setBoolean() method
@@ -255,5 +232,78 @@ public class BitFieldTest  {
         assertEquals(bf_single.clearShort((short) - 1), bf_single.setShortBoolean((short) - 1, false));
         assertEquals(bf_zero.clearShort((short) -1), bf_zero.setShortBoolean((short) -1, false));
     }
+
+	public void bitFieldTestTestGetValueTemplate(BitFieldTestTestGetValueAdapter adapter, int i1, int i2) {
+		assertEquals(adapter.getValue(bf_multi, -1), i1);
+		assertEquals(adapter.getValue(bf_multi, 0), 0);
+		assertEquals(adapter.getValue(bf_single, -1), i2);
+		assertEquals(adapter.getValue(bf_single, 0), 0);
+		assertEquals(adapter.getValue(bf_zero, -1), 0);
+		assertEquals(adapter.getValue(bf_zero, 0), 0);
+	}
+
+	interface BitFieldTestTestGetValueAdapter {
+		int getValue(BitField bitField1, int i1);
+	}
+
+	class BitFieldTestTestGetValueAdapterImpl implements BitFieldTestTestGetValueAdapter {
+		public int getValue(BitField bf_multi, int i1) {
+			return bf_multi.getValue(i1);
+		}
+	}
+
+	class BitFieldTestTestGetRawValueAdapterImpl implements BitFieldTestTestGetValueAdapter {
+		public int getValue(BitField bf_multi, int i1) {
+			return bf_multi.getRawValue(i1);
+		}
+	}
+
+	public void bitFieldTestTestGetShortValueTemplate(BitFieldTestTestGetShortValueAdapter adapter, int i1, int i2) {
+		assertEquals(adapter.getShortValue(bf_multi, (short) -1), (short) i1);
+		assertEquals(adapter.getShortValue(bf_multi, (short) 0), (short) 0);
+		assertEquals(adapter.getShortValue(bf_single, (short) -1), (short) i2);
+		assertEquals(adapter.getShortValue(bf_single, (short) 0), (short) 0);
+		assertEquals(adapter.getShortValue(bf_zero, (short) -1), (short) 0);
+		assertEquals(adapter.getShortValue(bf_zero, (short) 0), (short) 0);
+	}
+
+	interface BitFieldTestTestGetShortValueAdapter {
+		short getShortValue(BitField bitField1, short s1);
+	}
+
+	class BitFieldTestTestGetShortValueAdapterImpl implements BitFieldTestTestGetShortValueAdapter {
+		public short getShortValue(BitField bf_multi, short s1) {
+			return bf_multi.getShortValue(s1);
+		}
+	}
+
+	class BitFieldTestTestGetShortRawValueAdapterImpl implements BitFieldTestTestGetShortValueAdapter {
+		public short getShortValue(BitField bf_multi, short s1) {
+			return bf_multi.getShortRawValue(s1);
+		}
+	}
+
+	public void bitFieldTestTestShortTemplate(BitFieldTestTestShortAdapter adapter, int i1, int i2, int i3, int i4,
+			int i5, int i6) {
+		assertEquals(adapter.shortAction(bf_multi, (short) i1), (short) i2);
+		assertEquals(adapter.shortAction(bf_single, (short) i3), (short) i4);
+		assertEquals(adapter.shortAction(bf_zero, (short) i5), (short) i6);
+	}
+
+	interface BitFieldTestTestShortAdapter {
+		short shortAction(BitField bitField1, short s1);
+	}
+
+	class BitFieldTestTestClearShortAdapterImpl implements BitFieldTestTestShortAdapter {
+		public short shortAction(BitField bf_multi, short s1) {
+			return bf_multi.clearShort(s1);
+		}
+	}
+
+	class BitFieldTestTestSetShortAdapterImpl implements BitFieldTestTestShortAdapter {
+		public short shortAction(BitField bf_multi, short s1) {
+			return bf_multi.setShort(s1);
+		}
+	}
 
 }

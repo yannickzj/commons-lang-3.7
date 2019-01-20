@@ -16,6 +16,7 @@
  */
 package org.apache.commons.lang3.math;
 
+import java.lang.String;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -93,18 +94,16 @@ public class NumberUtilsTest {
     }
 
     /**
-     * Test for {@link NumberUtils#toFloat(String)}.
-     */
-    @Test
-    public void testToFloatString() {
-        assertTrue("toFloat(String) 1 failed", NumberUtils.toFloat("-1.2345") == -1.2345f);
-        assertTrue("toFloat(String) 2 failed", NumberUtils.toFloat("1.2345") == 1.2345f);
-        assertTrue("toFloat(String) 3 failed", NumberUtils.toFloat("abc") == 0.0f);
-        assertTrue("toFloat(Float.MAX_VALUE) failed", NumberUtils.toFloat(Float.MAX_VALUE+"") ==  Float.MAX_VALUE);
-        assertTrue("toFloat(Float.MIN_VALUE) failed", NumberUtils.toFloat(Float.MIN_VALUE+"") == Float.MIN_VALUE);
-        assertTrue("toFloat(empty) failed", NumberUtils.toFloat("") == 0.0f);
-        assertTrue("toFloat(null) failed", NumberUtils.toFloat(null) == 0.0f);
-    }
+	 * Test for  {@link NumberUtils#toFloat(String)} .
+	 */
+	@Test
+	public void testToFloatString() {
+		this.numberUtilsTestTestStringToStringTemplate(new NumberUtilsTestTestToFloatStringAdapterImpl(),
+				"toFloat(String) 1 failed", -1.2345f, "toFloat(String) 2 failed", 1.2345f, "toFloat(String) 3 failed",
+				0.0f, "toFloat(Float.MAX_VALUE) failed", Float.MAX_VALUE, Float.MAX_VALUE,
+				"toFloat(Float.MIN_VALUE) failed", Float.MIN_VALUE, Float.MIN_VALUE, "toFloat(empty) failed", 0.0f,
+				"toFloat(null) failed", 0.0f);
+	}
 
     /**
      * Test for {@link NumberUtils#toFloat(String, float)}.
@@ -129,18 +128,16 @@ public class NumberUtilsTest {
         assertTrue(NumberUtils.createNumber(shouldBeBigDecimal) instanceof BigDecimal);
     }
     /**
-     * Test for {@link NumberUtils#toDouble(String)}.
-     */
-    @Test
-    public void testStringToDoubleString() {
-        assertTrue("toDouble(String) 1 failed", NumberUtils.toDouble("-1.2345") == -1.2345d);
-        assertTrue("toDouble(String) 2 failed", NumberUtils.toDouble("1.2345") == 1.2345d);
-        assertTrue("toDouble(String) 3 failed", NumberUtils.toDouble("abc") == 0.0d);
-        assertTrue("toDouble(Double.MAX_VALUE) failed", NumberUtils.toDouble(Double.MAX_VALUE+"") == Double.MAX_VALUE);
-        assertTrue("toDouble(Double.MIN_VALUE) failed", NumberUtils.toDouble(Double.MIN_VALUE+"") == Double.MIN_VALUE);
-        assertTrue("toDouble(empty) failed", NumberUtils.toDouble("") == 0.0d);
-        assertTrue("toDouble(null) failed", NumberUtils.toDouble(null) == 0.0d);
-    }
+	 * Test for  {@link NumberUtils#toDouble(String)} .
+	 */
+	@Test
+	public void testStringToDoubleString() {
+		this.numberUtilsTestTestStringToStringTemplate(new NumberUtilsTestTestStringToDoubleStringAdapterImpl(),
+				"toDouble(String) 1 failed", -1.2345d, "toDouble(String) 2 failed", 1.2345d,
+				"toDouble(String) 3 failed", 0.0d, "toDouble(Double.MAX_VALUE) failed", Double.MAX_VALUE,
+				Double.MAX_VALUE, "toDouble(Double.MIN_VALUE) failed", Double.MIN_VALUE, Double.MIN_VALUE,
+				"toDouble(empty) failed", 0.0d, "toDouble(null) failed", 0.0d);
+	}
 
     /**
      * Test for {@link NumberUtils#toDouble(String, double)}.
@@ -892,22 +889,22 @@ public class NumberUtilsTest {
     }
 
     @Test
-    public void testMinimumLong() {
-        assertEquals("minimum(long,long,long) 1 failed", 12345L, NumberUtils.min(12345L, 12345L + 1L, 12345L + 2L));
-        assertEquals("minimum(long,long,long) 2 failed", 12345L, NumberUtils.min(12345L + 1L, 12345L, 12345 + 2L));
-        assertEquals("minimum(long,long,long) 3 failed", 12345L, NumberUtils.min(12345L + 1L, 12345L + 2L, 12345L));
-        assertEquals("minimum(long,long,long) 4 failed", 12345L, NumberUtils.min(12345L + 1L, 12345L, 12345L));
-        assertEquals("minimum(long,long,long) 5 failed", 12345L, NumberUtils.min(12345L, 12345L, 12345L));
-    }
+	public void testMinimumLong() {
+		this.numberUtilsTestTestMinimumTemplate(new NumberUtilsTestTestMinimumLongAdapterImpl(),
+				"minimum(long,long,long) 1 failed", 12345L, 12345L, 12345L, 1L, 12345L, 2L,
+				"minimum(long,long,long) 2 failed", 12345L, 12345L, 1L, 12345L, 2L, "minimum(long,long,long) 3 failed",
+				12345L, 12345L, 1L, 12345L, 2L, 12345L, "minimum(long,long,long) 4 failed", 12345L, 12345L, 1L, 12345L,
+				12345L, "minimum(long,long,long) 5 failed", 12345L, 12345L, 12345L, 12345L);
+	}
 
     @Test
-    public void testMinimumInt() {
-        assertEquals("minimum(int,int,int) 1 failed", 12345, NumberUtils.min(12345, 12345 + 1, 12345 + 2));
-        assertEquals("minimum(int,int,int) 2 failed", 12345, NumberUtils.min(12345 + 1, 12345, 12345 + 2));
-        assertEquals("minimum(int,int,int) 3 failed", 12345, NumberUtils.min(12345 + 1, 12345 + 2, 12345));
-        assertEquals("minimum(int,int,int) 4 failed", 12345, NumberUtils.min(12345 + 1, 12345, 12345));
-        assertEquals("minimum(int,int,int) 5 failed", 12345, NumberUtils.min(12345, 12345, 12345));
-    }
+	public void testMinimumInt() {
+		this.numberUtilsTestTestMinimumTemplate(new NumberUtilsTestTestMinimumIntAdapterImpl(),
+				"minimum(int,int,int) 1 failed", 12345, 12345, 12345, 1, 12345, 2, "minimum(int,int,int) 2 failed",
+				12345, 12345, 1, 12345, 2, "minimum(int,int,int) 3 failed", 12345, 12345, 1, 12345, 2, 12345,
+				"minimum(int,int,int) 4 failed", 12345, 12345, 1, 12345, 12345, "minimum(int,int,int) 5 failed", 12345,
+				12345, 12345, 12345);
+	}
 
     @Test
     public void testMinimumShort() {
@@ -956,22 +953,23 @@ public class NumberUtilsTest {
     }
 
     @Test
-    public void testMaximumLong() {
-        assertEquals("maximum(long,long,long) 1 failed", 12345L, NumberUtils.max(12345L, 12345L - 1L, 12345L - 2L));
-        assertEquals("maximum(long,long,long) 2 failed", 12345L, NumberUtils.max(12345L - 1L, 12345L, 12345L - 2L));
-        assertEquals("maximum(long,long,long) 3 failed", 12345L, NumberUtils.max(12345L - 1L, 12345L - 2L, 12345L));
-        assertEquals("maximum(long,long,long) 4 failed", 12345L, NumberUtils.max(12345L - 1L, 12345L, 12345L));
-        assertEquals("maximum(long,long,long) 5 failed", 12345L, NumberUtils.max(12345L, 12345L, 12345L));
-    }
+	public void testMaximumLong() {
+		this.numberUtilsTestTestMaximumTemplate(new NumberUtilsTestTestMaximumLongAdapterImpl(),
+				"maximum(long,long,long) 1 failed", 12345L, 12345L, 12345L, 1L, 12345L, 2L,
+				"maximum(long,long,long) 2 failed", 12345L, 12345L, 1L, 12345L, 12345L, 2L,
+				"maximum(long,long,long) 3 failed", 12345L, 12345L, 1L, 12345L, 2L, 12345L,
+				"maximum(long,long,long) 4 failed", 12345L, 12345L, 1L, 12345L, 12345L,
+				"maximum(long,long,long) 5 failed", 12345L, 12345L, 12345L, 12345L);
+	}
 
     @Test
-    public void testMaximumInt() {
-        assertEquals("maximum(int,int,int) 1 failed", 12345, NumberUtils.max(12345, 12345 - 1, 12345 - 2));
-        assertEquals("maximum(int,int,int) 2 failed", 12345, NumberUtils.max(12345 - 1, 12345, 12345 - 2));
-        assertEquals("maximum(int,int,int) 3 failed", 12345, NumberUtils.max(12345 - 1, 12345 - 2, 12345));
-        assertEquals("maximum(int,int,int) 4 failed", 12345, NumberUtils.max(12345 - 1, 12345, 12345));
-        assertEquals("maximum(int,int,int) 5 failed", 12345, NumberUtils.max(12345, 12345, 12345));
-    }
+	public void testMaximumInt() {
+		this.numberUtilsTestTestMaximumTemplate(new NumberUtilsTestTestMaximumIntAdapterImpl(),
+				"maximum(int,int,int) 1 failed", 12345, 12345, 12345, 1, 12345, 2, "maximum(int,int,int) 2 failed",
+				12345, 12345, 1, 12345, 12345, 2, "maximum(int,int,int) 3 failed", 12345, 12345, 1, 12345, 2, 12345,
+				"maximum(int,int,int) 4 failed", 12345, 12345, 1, 12345, 12345, "maximum(int,int,int) 5 failed", 12345,
+				12345, 12345, 12345);
+	}
 
     @Test
     public void testMaximumShort() {
@@ -1523,18 +1521,14 @@ public class NumberUtilsTest {
     }
 
     @Test
-    public void compareInt() {
-        assertTrue(NumberUtils.compare(-3, 0) < 0);
-        assertTrue(NumberUtils.compare(113, 113)==0);
-        assertTrue(NumberUtils.compare(213, 32) > 0);
-    }
+	public void compareInt() {
+		this.numberUtilsTestCompareTemplate(-3, 0, 113, 113, 213, 32);
+	}
 
     @Test
-    public void compareLong() {
-        assertTrue(NumberUtils.compare(-3L, 0L) < 0);
-        assertTrue(NumberUtils.compare(113L, 113L)==0);
-        assertTrue(NumberUtils.compare(213L, 32L) > 0);
-    }
+	public void compareLong() {
+		this.numberUtilsTestCompareTemplate(-3L, 0L, 113L, 113L, 213L, 32L);
+	}
 
     @Test
     public void compareShort() {
@@ -1549,4 +1543,92 @@ public class NumberUtilsTest {
         assertTrue(NumberUtils.compare((byte)113, (byte)113)==0);
         assertTrue(NumberUtils.compare((byte)123, (byte)32) > 0);
     }
+
+	public void numberUtilsTestTestStringToStringTemplate(NumberUtilsTestTestStringToStringAdapter adapter,
+			String string1, double d1, String string2, double d2, String string3, double d3, String string4, double d4,
+			double d5, String string5, double d6, double d7, String string6, double d8, String string7, double d9) {
+		assertTrue(string1, adapter.to("-1.2345") == d1);
+		assertTrue(string2, adapter.to("1.2345") == d2);
+		assertTrue(string3, adapter.to("abc") == d3);
+		assertTrue(string4, adapter.to(d4 + "") == d5);
+		assertTrue(string5, adapter.to(d6 + "") == d7);
+		assertTrue(string6, adapter.to("") == d8);
+		assertTrue(string7, adapter.to(null) == d9);
+	}
+
+	interface NumberUtilsTestTestStringToStringAdapter {
+		double to(String string1);
+	}
+
+	class NumberUtilsTestTestToFloatStringAdapterImpl implements NumberUtilsTestTestStringToStringAdapter {
+		public double to(String string1) {
+			return NumberUtils.toFloat(string1);
+		}
+	}
+
+	class NumberUtilsTestTestStringToDoubleStringAdapterImpl implements NumberUtilsTestTestStringToStringAdapter {
+		public double to(String string1) {
+			return NumberUtils.toDouble(string1);
+		}
+	}
+
+	public void numberUtilsTestTestMinimumTemplate(NumberUtilsTestTestMinimumAdapter adapter, String string1, long l1,
+			long l2, long l3, long l4, long l5, long l6, String string2, long l7, long l8, long l9, long l10, long l11,
+			String string3, long l12, long l13, long l14, long l15, long l16, long l17, String string4, long l18,
+			long l19, long l20, long l21, long l22, String string5, long l23, long l24, long l25, long l26) {
+		assertEquals(string1, l1, adapter.min(l2, l3 + l4, l5 + l6));
+		assertEquals(string2, l7, adapter.min(l8 + l9, l10, 12345 + l11));
+		assertEquals(string3, l12, adapter.min(l13 + l14, l15 + l16, l17));
+		assertEquals(string4, l18, adapter.min(l19 + l20, l21, l22));
+		assertEquals(string5, l23, adapter.min(l24, l25, l26));
+	}
+
+	interface NumberUtilsTestTestMinimumAdapter {
+		long min(long l1, long l2, long l3);
+	}
+
+	class NumberUtilsTestTestMinimumLongAdapterImpl implements NumberUtilsTestTestMinimumAdapter {
+		public long min(long l1, long l2, long l3) {
+			return NumberUtils.min(l1, l2, l3);
+		}
+	}
+
+	class NumberUtilsTestTestMinimumIntAdapterImpl implements NumberUtilsTestTestMinimumAdapter {
+		public long min(long l1, long l2, long l3) {
+			return NumberUtils.min(l1, l2, l3);
+		}
+	}
+
+	public void numberUtilsTestTestMaximumTemplate(NumberUtilsTestTestMaximumAdapter adapter, String string1, long l1,
+			long l2, long l3, long l4, long l5, long l6, String string2, long l7, long l8, long l9, long l10, long l11,
+			long l12, String string3, long l13, long l14, long l15, long l16, long l17, long l18, String string4,
+			long l19, long l20, long l21, long l22, long l23, String string5, long l24, long l25, long l26, long l27) {
+		assertEquals(string1, l1, adapter.max(l2, l3 - l4, l5 - l6));
+		assertEquals(string2, l7, adapter.max(l8 - l9, l10, l11 - l12));
+		assertEquals(string3, l13, adapter.max(l14 - l15, l16 - l17, l18));
+		assertEquals(string4, l19, adapter.max(l20 - l21, l22, l23));
+		assertEquals(string5, l24, adapter.max(l25, l26, l27));
+	}
+
+	interface NumberUtilsTestTestMaximumAdapter {
+		long max(long l1, long l2, long l3);
+	}
+
+	class NumberUtilsTestTestMaximumLongAdapterImpl implements NumberUtilsTestTestMaximumAdapter {
+		public long max(long l1, long l2, long l3) {
+			return NumberUtils.max(l1, l2, l3);
+		}
+	}
+
+	class NumberUtilsTestTestMaximumIntAdapterImpl implements NumberUtilsTestTestMaximumAdapter {
+		public long max(long l1, long l2, long l3) {
+			return NumberUtils.max(l1, l2, l3);
+		}
+	}
+
+	public void numberUtilsTestCompareTemplate(long l1, long l2, long l3, long l4, long l5, long l6) {
+		assertTrue(NumberUtils.compare(l1, l2) < 0);
+		assertTrue(NumberUtils.compare(l3, l4) == 0);
+		assertTrue(NumberUtils.compare(l5, l6) > 0);
+	}
 }

@@ -29,19 +29,12 @@ import static org.junit.Assert.assertTrue;
  */
 public class MutableFloatTest {
 
-    // ----------------------------------------------------------------
     @Test
-    public void testConstructors() {
-        assertEquals(0f, new MutableFloat().floatValue(), 0.0001f);
-
-        assertEquals(1f, new MutableFloat(1f).floatValue(), 0.0001f);
-
-        assertEquals(2f, new MutableFloat(Float.valueOf(2f)).floatValue(), 0.0001f);
-        assertEquals(3f, new MutableFloat(new MutableFloat(3f)).floatValue(), 0.0001f);
-
-        assertEquals(2f, new MutableFloat("2.0").floatValue(), 0.0001f);
-
-    }
+	public void testConstructors() throws Exception {
+		MutableTestTestConstructorsTemplate.mutableTestTestConstructorsTemplate(
+				new MutableFloatTestTestConstructorsAdapterImpl(), 0f, MutableFloat.class, 0.0001f, 1f, float.class,
+				0.0001f, 2f, 0.0001f, 3f, 0.0001f, 2f, 0.0001f);
+	}
 
     @Test(expected=NullPointerException.class)
     public void testConstructorNull() {
@@ -74,16 +67,10 @@ public class MutableFloatTest {
     }
 
     @Test
-    public void testNanInfinite() {
-        MutableFloat mutNum = new MutableFloat(Float.NaN);
-        assertTrue(mutNum.isNaN());
-
-        mutNum = new MutableFloat(Float.POSITIVE_INFINITY);
-        assertTrue(mutNum.isInfinite());
-
-        mutNum = new MutableFloat(Float.NEGATIVE_INFINITY);
-        assertTrue(mutNum.isInfinite());
-    }
+	public void testNanInfinite() throws Exception {
+		MutableTestTestNanInfiniteTemplate.mutableTestTestNanInfiniteTemplate(
+				new MutableFloatTestTestNanInfiniteAdapterImpl(), MutableFloat.class, float.class);
+	}
 
     @Test
     public void testEquals() {
@@ -280,5 +267,21 @@ public class MutableFloatTest {
         assertEquals("10.0", new MutableFloat(10f).toString());
         assertEquals("-123.0", new MutableFloat(-123f).toString());
     }
+
+	class MutableFloatTestTestConstructorsAdapterImpl implements MutableTestTestConstructorsAdapter<MutableFloat> {
+		public double value(MutableFloat tMutableNumber1) {
+			return tMutableNumber1.floatValue();
+		}
+	}
+
+	class MutableFloatTestTestNanInfiniteAdapterImpl implements MutableTestTestNanInfiniteAdapter<MutableFloat> {
+		public boolean isNaN(MutableFloat mutNum) {
+			return mutNum.isNaN();
+		}
+
+		public boolean isInfinite(MutableFloat mutNum) {
+			return mutNum.isInfinite();
+		}
+	}
 
 }

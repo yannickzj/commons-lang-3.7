@@ -80,14 +80,10 @@ public class DefaultToStringStyleTest {
     }
 
     @Test
-    public void testPerson() {
-        final Person p = new Person();
-        p.name = "John Doe";
-        p.age = 33;
-        p.smoker = false;
-        final String pBaseStr = p.getClass().getName() + "@" + Integer.toHexString(System.identityHashCode(p));
-        assertEquals(pBaseStr + "[name=John Doe,age=33,smoker=false]", new ToStringBuilder(p).append("name", p.name).append("age", p.age).append("smoker", p.smoker).toString());
-    }
+	public void testPerson() {
+		ToStringStyleTestTestPersonTemplate.toStringStyleTestTestPersonTemplate("John Doe", 33,
+				"[name=John Doe,age=33,smoker=false]");
+	}
 
     @Test
     public void testLong() {

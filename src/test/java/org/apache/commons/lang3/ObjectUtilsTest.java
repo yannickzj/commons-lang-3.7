@@ -16,6 +16,7 @@
  */
 package org.apache.commons.lang3;
 
+import org.apache.commons.lang3.ObjectUtilsTest.UncloneableString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -454,20 +455,13 @@ public class ObjectUtilsTest {
     }
 
     /**
-     * Tests {@link ObjectUtils#clone(Object)} with an uncloneable object.
-     *
-     * @throws java.lang.Throwable because we expect this to fail
-     */
-    @Test(expected = NoSuchMethodException.class)
-    public void testCloneOfUncloneable() throws Throwable {
-        final UncloneableString string = new UncloneableString("apache");
-        try {
-            ObjectUtils.clone(string);
-            fail("Thrown " + CloneFailedException.class.getName() + " expected");
-        } catch (final CloneFailedException e) {
-            throw e.getCause();
-        }
-    }
+	 * Tests  {@link ObjectUtils#clone(Object)}  with an uncloneable object.
+	 * @throws java.lang.Throwable  because we expect this to fail
+	 */
+	@Test(expected = NoSuchMethodException.class)
+	public void testCloneOfUncloneable() throws Throwable {
+		this.objectUtilsTestTestCloneOfUncloneableTemplate(new ObjectUtilsTestTestCloneOfUncloneableAdapterImpl());
+	}
 
     /**
      * Tests {@link ObjectUtils#clone(Object)} with an object array.
@@ -506,20 +500,14 @@ public class ObjectUtilsTest {
     }
 
     /**
-     * Tests {@link ObjectUtils#cloneIfPossible(Object)} with an uncloneable object.
-     *
-     * @throws java.lang.Throwable because we expect this to fail
-     */
-    @Test(expected = NoSuchMethodException.class)
-    public void testPossibleCloneOfUncloneable() throws Throwable {
-        final UncloneableString string = new UncloneableString("apache");
-        try {
-            ObjectUtils.cloneIfPossible(string);
-            fail("Thrown " + CloneFailedException.class.getName() + " expected");
-        } catch (final CloneFailedException e) {
-            throw e.getCause();
-        }
-    }
+	 * Tests  {@link ObjectUtils#cloneIfPossible(Object)}  with an uncloneable object.
+	 * @throws java.lang.Throwable  because we expect this to fail
+	 */
+	@Test(expected = NoSuchMethodException.class)
+	public void testPossibleCloneOfUncloneable() throws Throwable {
+		this.objectUtilsTestTestCloneOfUncloneableTemplate(
+				new ObjectUtilsTestTestPossibleCloneOfUncloneableAdapterImpl());
+	}
 
     @Test
     public void testConstMethods() {
@@ -666,5 +654,33 @@ public class ObjectUtilsTest {
         }
 
     }
+
+	public void objectUtilsTestTestCloneOfUncloneableTemplate(ObjectUtilsTestTestCloneOfUncloneableAdapter adapter)
+			throws Throwable {
+		final UncloneableString string = new UncloneableString("apache");
+		try {
+			adapter.clone(string);
+			fail("Thrown " + CloneFailedException.class.getName() + " expected");
+		} catch (final CloneFailedException e) {
+			throw e.getCause();
+		}
+	}
+
+	interface ObjectUtilsTestTestCloneOfUncloneableAdapter {
+		ObjectUtilsTest.UncloneableString clone(ObjectUtilsTest.UncloneableString uncloneableString1);
+	}
+
+	class ObjectUtilsTestTestCloneOfUncloneableAdapterImpl implements ObjectUtilsTestTestCloneOfUncloneableAdapter {
+		public ObjectUtilsTest.UncloneableString clone(ObjectUtilsTest.UncloneableString string) {
+			return ObjectUtils.clone(string);
+		}
+	}
+
+	class ObjectUtilsTestTestPossibleCloneOfUncloneableAdapterImpl
+			implements ObjectUtilsTestTestCloneOfUncloneableAdapter {
+		public ObjectUtilsTest.UncloneableString clone(ObjectUtilsTest.UncloneableString string) {
+			return ObjectUtils.cloneIfPossible(string);
+		}
+	}
 
 }

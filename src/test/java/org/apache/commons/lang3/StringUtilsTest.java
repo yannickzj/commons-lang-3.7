@@ -16,6 +16,8 @@
  */
 package org.apache.commons.lang3;
 
+import java.util.Locale;
+import java.lang.String;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -34,7 +36,6 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.regex.PatternSyntaxException;
 
@@ -126,32 +127,18 @@ public class StringUtilsTest {
     }
 
     @Test
-    public void testUpperCase() {
-        assertNull(StringUtils.upperCase(null));
-        assertNull(StringUtils.upperCase(null, Locale.ENGLISH));
-        assertEquals("upperCase(String) failed",
-                "FOO TEST THING", StringUtils.upperCase("fOo test THING"));
-        assertEquals("upperCase(empty-string) failed",
-                "", StringUtils.upperCase(""));
-        assertEquals("upperCase(String, Locale) failed",
-                "FOO TEST THING", StringUtils.upperCase("fOo test THING", Locale.ENGLISH));
-        assertEquals("upperCase(empty-string, Locale) failed",
-                "", StringUtils.upperCase("", Locale.ENGLISH));
-    }
+	public void testUpperCase() {
+		this.stringUtilsTestTestCaseTemplate(new StringUtilsTestTestUpperCaseAdapterImpl(), "upperCase(String) failed",
+				"FOO TEST THING", "upperCase(empty-string) failed", "upperCase(String, Locale) failed",
+				"FOO TEST THING", "upperCase(empty-string, Locale) failed");
+	}
 
     @Test
-    public void testLowerCase() {
-        assertNull(StringUtils.lowerCase(null));
-        assertNull(StringUtils.lowerCase(null, Locale.ENGLISH));
-        assertEquals("lowerCase(String) failed",
-                "foo test thing", StringUtils.lowerCase("fOo test THING"));
-        assertEquals("lowerCase(empty-string) failed",
-                "", StringUtils.lowerCase(""));
-        assertEquals("lowerCase(String, Locale) failed",
-                "foo test thing", StringUtils.lowerCase("fOo test THING", Locale.ENGLISH));
-        assertEquals("lowerCase(empty-string, Locale) failed",
-                "", StringUtils.lowerCase("", Locale.ENGLISH));
-    }
+	public void testLowerCase() {
+		this.stringUtilsTestTestCaseTemplate(new StringUtilsTestTestLowerCaseAdapterImpl(), "lowerCase(String) failed",
+				"foo test thing", "lowerCase(empty-string) failed", "lowerCase(String, Locale) failed",
+				"foo test thing", "lowerCase(empty-string, Locale) failed");
+	}
 
     @Test
     public void testCapitalize() {
@@ -1228,62 +1215,18 @@ public class StringUtilsTest {
     }
 
     @Test
-    public void testReplaceAll() {
-        assertNull(StringUtils.replaceAll(null, "", ""));
-
-        assertEquals("any", StringUtils.replaceAll("any", null, ""));
-        assertEquals("any", StringUtils.replaceAll("any", "", null));
-
-        assertEquals("zzz", StringUtils.replaceAll("", "", "zzz"));
-        assertEquals("zzz", StringUtils.replaceAll("", ".*", "zzz"));
-        assertEquals("", StringUtils.replaceAll("", ".+", "zzz"));
-        assertEquals("ZZaZZbZZcZZ", StringUtils.replaceAll("abc", "", "ZZ"));
-
-        assertEquals("z\nz", StringUtils.replaceAll("<__>\n<__>", "<.*>", "z"));
-        assertEquals("z", StringUtils.replaceAll("<__>\n<__>", "(?s)<.*>", "z"));
-
-        assertEquals("ABC___123", StringUtils.replaceAll("ABCabc123", "[a-z]", "_"));
-        assertEquals("ABC_123", StringUtils.replaceAll("ABCabc123", "[^A-Z0-9]+", "_"));
-        assertEquals("ABC123", StringUtils.replaceAll("ABCabc123", "[^A-Z0-9]+", ""));
-        assertEquals("Lorem_ipsum_dolor_sit",
-                     StringUtils.replaceAll("Lorem ipsum  dolor   sit", "( +)([a-z]+)", "_$2"));
-
-        try {
-            StringUtils.replaceAll("any", "{badRegexSyntax}", "");
-            fail("StringUtils.replaceAll expecting PatternSyntaxException");
-        } catch (final PatternSyntaxException ex) {
-            // empty
-        }
-    }
+	public void testReplaceAll() {
+		this.stringUtilsTestTestReplaceTemplate(new StringUtilsTestTestReplaceAllAdapterImpl(), "ZZaZZbZZcZZ", "z\nz",
+				"ABC___123", "ABC_123", "ABCabc123", "ABC123", "ABCabc123", "Lorem_ipsum_dolor_sit",
+				"StringUtils.replaceAll expecting PatternSyntaxException");
+	}
 
     @Test
-    public void testReplaceFirst() {
-        assertNull(StringUtils.replaceFirst(null, "", ""));
-
-        assertEquals("any", StringUtils.replaceFirst("any", null, ""));
-        assertEquals("any", StringUtils.replaceFirst("any", "", null));
-
-        assertEquals("zzz", StringUtils.replaceFirst("", "", "zzz"));
-        assertEquals("zzz", StringUtils.replaceFirst("", ".*", "zzz"));
-        assertEquals("", StringUtils.replaceFirst("", ".+", "zzz"));
-        assertEquals("ZZabc", StringUtils.replaceFirst("abc", "", "ZZ"));
-
-        assertEquals("z\n<__>", StringUtils.replaceFirst("<__>\n<__>", "<.*>", "z"));
-        assertEquals("z", StringUtils.replaceFirst("<__>\n<__>", "(?s)<.*>", "z"));
-
-        assertEquals("ABC_bc123", StringUtils.replaceFirst("ABCabc123", "[a-z]", "_"));
-        assertEquals("ABC_123abc", StringUtils.replaceFirst("ABCabc123abc", "[^A-Z0-9]+", "_"));
-        assertEquals("ABC123abc", StringUtils.replaceFirst("ABCabc123abc", "[^A-Z0-9]+", ""));
-        assertEquals("Lorem_ipsum  dolor   sit",
-                     StringUtils.replaceFirst("Lorem ipsum  dolor   sit", "( +)([a-z]+)", "_$2"));
-
-        try {
-            StringUtils.replaceFirst("any", "{badRegexSyntax}", "");
-            fail("StringUtils.replaceFirst expecting PatternSyntaxException");
-        } catch (final PatternSyntaxException ex) {
-            // empty
-        }
-    }
+	public void testReplaceFirst() {
+		this.stringUtilsTestTestReplaceTemplate(new StringUtilsTestTestReplaceFirstAdapterImpl(), "ZZabc", "z\n<__>",
+				"ABC_bc123", "ABC_123abc", "ABCabc123abc", "ABC123abc", "ABCabc123abc", "Lorem_ipsum  dolor   sit",
+				"StringUtils.replaceFirst expecting PatternSyntaxException");
+	}
 
     @Test
     public void testReplace_StringStringStringInt() {
@@ -3240,4 +3183,79 @@ public class StringUtilsTest {
         assertEquals("5417543010", StringUtils.getDigits("(541) 754-3010"));
         assertEquals("\u0967\u0968\u0969", StringUtils.getDigits("\u0967\u0968\u0969"));
     }
+
+	public void stringUtilsTestTestReplaceTemplate(StringUtilsTestTestReplaceAdapter adapter, String string1,
+			String string2, String string3, String string4, String string5, String string6, String string7,
+			String string8, String string9) {
+		assertNull(adapter.replace(null, "", ""));
+		assertEquals("any", adapter.replace("any", null, ""));
+		assertEquals("any", adapter.replace("any", "", null));
+		assertEquals("zzz", adapter.replace("", "", "zzz"));
+		assertEquals("zzz", adapter.replace("", ".*", "zzz"));
+		assertEquals("", adapter.replace("", ".+", "zzz"));
+		assertEquals(string1, adapter.replace("abc", "", "ZZ"));
+		assertEquals(string2, adapter.replace("<__>\n<__>", "<.*>", "z"));
+		assertEquals("z", adapter.replace("<__>\n<__>", "(?s)<.*>", "z"));
+		assertEquals(string3, adapter.replace("ABCabc123", "[a-z]", "_"));
+		assertEquals(string4, adapter.replace(string5, "[^A-Z0-9]+", "_"));
+		assertEquals(string6, adapter.replace(string7, "[^A-Z0-9]+", ""));
+		assertEquals(string8, adapter.replace("Lorem ipsum  dolor   sit", "( +)([a-z]+)", "_$2"));
+		try {
+			adapter.replace("any", "{badRegexSyntax}", "");
+			fail(string9);
+		} catch (final PatternSyntaxException ex) {
+		}
+	}
+
+	interface StringUtilsTestTestReplaceAdapter {
+		String replace(String string1, String string2, String string3);
+	}
+
+	class StringUtilsTestTestReplaceAllAdapterImpl implements StringUtilsTestTestReplaceAdapter {
+		public String replace(String string1, String string2, String string3) {
+			return StringUtils.replaceAll(string1, string2, string3);
+		}
+	}
+
+	class StringUtilsTestTestReplaceFirstAdapterImpl implements StringUtilsTestTestReplaceAdapter {
+		public String replace(String string1, String string2, String string3) {
+			return StringUtils.replaceFirst(string1, string2, string3);
+		}
+	}
+
+	public void stringUtilsTestTestCaseTemplate(StringUtilsTestTestCaseAdapter adapter, String string1, String string2,
+			String string3, String string4, String string5, String string6) {
+		assertNull(adapter.caseAction(null));
+		assertNull(adapter.caseAction1(null, Locale.ENGLISH));
+		assertEquals(string1, string2, adapter.caseAction("fOo test THING"));
+		assertEquals(string3, "", adapter.caseAction(""));
+		assertEquals(string4, string5, adapter.caseAction1("fOo test THING", Locale.ENGLISH));
+		assertEquals(string6, "", adapter.caseAction1("", Locale.ENGLISH));
+	}
+
+	interface StringUtilsTestTestCaseAdapter {
+		String caseAction(String string1);
+
+		String caseAction1(String string1, Locale locale1);
+	}
+
+	class StringUtilsTestTestUpperCaseAdapterImpl implements StringUtilsTestTestCaseAdapter {
+		public String caseAction(String string1) {
+			return StringUtils.upperCase(string1);
+		}
+
+		public String caseAction1(String string1, Locale locale1) {
+			return StringUtils.upperCase(string1, locale1);
+		}
+	}
+
+	class StringUtilsTestTestLowerCaseAdapterImpl implements StringUtilsTestTestCaseAdapter {
+		public String caseAction(String string1) {
+			return StringUtils.lowerCase(string1);
+		}
+
+		public String caseAction1(String string1, Locale locale1) {
+			return StringUtils.lowerCase(string1, locale1);
+		}
+	}
 }

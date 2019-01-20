@@ -94,15 +94,9 @@ public class MutableTripleTest {
     }
 
     @Test
-    public void testToString() throws Exception {
-        assertEquals("(null,null,null)", MutableTriple.of(null, null, null).toString());
-        assertEquals("(null,two,null)", MutableTriple.of(null, "two", null).toString());
-        assertEquals("(one,null,null)", MutableTriple.of("one", null, null).toString());
-        assertEquals("(one,two,null)", MutableTriple.of("one", "two", null).toString());
-        assertEquals("(null,two,three)", MutableTriple.of(null, "two", "three").toString());
-        assertEquals("(one,null,three)", MutableTriple.of("one", null, "three").toString());
-        assertEquals("(one,two,three)", MutableTriple.of("one", "two", "three").toString());
-    }
+	public void testToString() throws Exception {
+		TripleTestTestToStringTemplate.tripleTestTestToStringTemplate();
+	}
 
     @Test
     @SuppressWarnings("unchecked")

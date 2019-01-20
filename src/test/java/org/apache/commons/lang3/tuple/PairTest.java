@@ -71,24 +71,14 @@ public class PairTest {
     }
 
     @Test
-    public void testComparable1() throws Exception {
-        final Pair<String, String> pair1 = Pair.of("A", "D");
-        final Pair<String, String> pair2 = Pair.of("B", "C");
-        assertTrue(pair1.compareTo(pair1) == 0);
-        assertTrue(pair1.compareTo(pair2) < 0);
-        assertTrue(pair2.compareTo(pair2) == 0);
-        assertTrue(pair2.compareTo(pair1) > 0);
-    }
+	public void testComparable1() throws Exception {
+		this.pairTestTestTemplate("D", "B", "C");
+	}
 
     @Test
-    public void testComparable2() throws Exception {
-        final Pair<String, String> pair1 = Pair.of("A", "C");
-        final Pair<String, String> pair2 = Pair.of("A", "D");
-        assertTrue(pair1.compareTo(pair1) == 0);
-        assertTrue(pair1.compareTo(pair2) < 0);
-        assertTrue(pair2.compareTo(pair2) == 0);
-        assertTrue(pair2.compareTo(pair1) > 0);
-    }
+	public void testComparable2() throws Exception {
+		this.pairTestTestTemplate("C", "A", "D");
+	}
 
     @Test
     public void testToString() throws Exception {
@@ -115,5 +105,14 @@ public class PairTest {
         final Pair<String, String> pair = Pair.of("Key", "Value");
         assertEquals("         (Key,Value)", String.format("%1$20s", pair));
     }
+
+	public void pairTestTestTemplate(String string1, String string2, String string3) throws Exception {
+		final Pair<String, String> pair1 = Pair.of("A", string1);
+		final Pair<String, String> pair2 = Pair.of(string2, string3);
+		assertTrue(pair1.compareTo(pair1) == 0);
+		assertTrue(pair1.compareTo(pair2) < 0);
+		assertTrue(pair2.compareTo(pair2) == 0);
+		assertTrue(pair2.compareTo(pair1) > 0);
+	}
 
 }

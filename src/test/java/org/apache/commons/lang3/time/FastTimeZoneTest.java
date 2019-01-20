@@ -78,23 +78,23 @@ public class FastTimeZoneTest {
     }
 
     @Test
-    public void testHoursColonMinutes() {
-        assertEquals(HOURS_23, FastTimeZone.getGmtTimeZone("23:00").getRawOffset());
-        assertEquals(HOURS_2, FastTimeZone.getGmtTimeZone("2:00").getRawOffset());
-        assertEquals(MINUTES_59, FastTimeZone.getGmtTimeZone("00:59").getRawOffset());
-        assertEquals(MINUTES_5, FastTimeZone.getGmtTimeZone("00:5").getRawOffset());
-        assertEquals(HOURS_23+MINUTES_59, FastTimeZone.getGmtTimeZone("23:59").getRawOffset());
-        assertEquals(HOURS_2+MINUTES_5, FastTimeZone.getGmtTimeZone("2:5").getRawOffset());
-    }
+	public void testHoursColonMinutes() {
+		this.fastTimeZoneTestTestHoursMinutesTemplate("23:00", "2:00", "00:59", "00:5", "23:59", "2:5");
+	}
 
     @Test
-    public void testHoursMinutes() {
-        assertEquals(HOURS_23, FastTimeZone.getGmtTimeZone("2300").getRawOffset());
-        assertEquals(HOURS_2, FastTimeZone.getGmtTimeZone("0200").getRawOffset());
-        assertEquals(MINUTES_59, FastTimeZone.getGmtTimeZone("0059").getRawOffset());
-        assertEquals(MINUTES_5, FastTimeZone.getGmtTimeZone("0005").getRawOffset());
-        assertEquals(HOURS_23+MINUTES_59, FastTimeZone.getGmtTimeZone("2359").getRawOffset());
-        assertEquals(HOURS_2+MINUTES_5, FastTimeZone.getGmtTimeZone("0205").getRawOffset());
-    }
+	public void testHoursMinutes() {
+		this.fastTimeZoneTestTestHoursMinutesTemplate("2300", "0200", "0059", "0005", "2359", "0205");
+	}
+
+	public void fastTimeZoneTestTestHoursMinutesTemplate(String string1, String string2, String string3, String string4,
+			String string5, String string6) {
+		assertEquals(HOURS_23, FastTimeZone.getGmtTimeZone(string1).getRawOffset());
+		assertEquals(HOURS_2, FastTimeZone.getGmtTimeZone(string2).getRawOffset());
+		assertEquals(MINUTES_59, FastTimeZone.getGmtTimeZone(string3).getRawOffset());
+		assertEquals(MINUTES_5, FastTimeZone.getGmtTimeZone(string4).getRawOffset());
+		assertEquals(HOURS_23 + MINUTES_59, FastTimeZone.getGmtTimeZone(string5).getRawOffset());
+		assertEquals(HOURS_2 + MINUTES_5, FastTimeZone.getGmtTimeZone(string6).getRawOffset());
+	}
 
 }

@@ -16,6 +16,8 @@
  */
 package org.apache.commons.lang3.mutable;
 
+import java.lang.Number;
+import java.lang.Object;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -74,22 +76,10 @@ public class MutableByteTest {
     }
 
     @Test
-    public void testEquals() {
-        final MutableByte mutNumA = new MutableByte((byte) 0);
-        final MutableByte mutNumB = new MutableByte((byte) 0);
-        final MutableByte mutNumC = new MutableByte((byte) 1);
-
-        assertTrue(mutNumA.equals(mutNumA));
-        assertTrue(mutNumA.equals(mutNumB));
-        assertTrue(mutNumB.equals(mutNumA));
-        assertTrue(mutNumB.equals(mutNumB));
-        assertFalse(mutNumA.equals(mutNumC));
-        assertFalse(mutNumB.equals(mutNumC));
-        assertTrue(mutNumC.equals(mutNumC));
-        assertFalse(mutNumA.equals(null));
-        assertFalse(mutNumA.equals(Byte.valueOf((byte) 0)));
-        assertFalse(mutNumA.equals("0"));
-    }
+	public void testEquals() throws Exception {
+		MutableTestTestEqualsTemplate.mutableTestTestEqualsTemplate(new MutableByteTestTestEqualsAdapterImpl(),
+				MutableByte.class, byte.class);
+	}
 
     @Test
     public void testHashCode() {
@@ -211,40 +201,28 @@ public class MutableByteTest {
     }
 
     @Test
-    public void testGetAndAddValuePrimitive() {
-        final MutableByte mutableByte = new MutableByte((byte)0);
-        final byte result = mutableByte.getAndAdd((byte) 1);
-
-        assertEquals((byte) 0, result);
-        assertEquals((byte) 1, mutableByte.byteValue());
-    }
+	public void testGetAndAddValuePrimitive() {
+		this.mutableByteTestTestAddAndGetValuePrimitiveTemplate(
+				new MutableByteTestTestGetAndAddValuePrimitiveAdapterImpl(), 0);
+	}
 
     @Test
-    public void testGetAndAddValueObject() {
-        final MutableByte mutableByte = new MutableByte((byte)0);
-        final byte result = mutableByte.getAndAdd(Byte.valueOf((byte) 1));
-
-        assertEquals((byte) 0, result);
-        assertEquals((byte) 1, mutableByte.byteValue());
-    }
+	public void testGetAndAddValueObject() {
+		this.mutableByteTestTestAddAndGetValueObjectTemplate(new MutableByteTestTestGetAndAddValueObjectAdapterImpl(),
+				0);
+	}
 
     @Test
-    public void testAddAndGetValuePrimitive() {
-        final MutableByte mutableByte = new MutableByte((byte)0);
-        final byte result = mutableByte.addAndGet((byte) 1);
-
-        assertEquals((byte) 1, result);
-        assertEquals((byte) 1, mutableByte.byteValue());
-    }
+	public void testAddAndGetValuePrimitive() {
+		this.mutableByteTestTestAddAndGetValuePrimitiveTemplate(
+				new MutableByteTestTestAddAndGetValuePrimitiveAdapterImpl(), 1);
+	}
 
     @Test
-    public void testAddAndGetValueObject() {
-        final MutableByte mutableByte = new MutableByte((byte)0);
-        final byte result = mutableByte.addAndGet(Byte.valueOf((byte) 1));
-
-        assertEquals((byte) 1, result);
-        assertEquals((byte) 1, mutableByte.byteValue());
-    }
+	public void testAddAndGetValueObject() {
+		this.mutableByteTestTestAddAndGetValueObjectTemplate(new MutableByteTestTestAddAndGetValueObjectAdapterImpl(),
+				1);
+	}
 
     @Test
     public void testSubtractValuePrimitive() {
@@ -268,5 +246,65 @@ public class MutableByteTest {
         assertEquals("10", new MutableByte((byte) 10).toString());
         assertEquals("-123", new MutableByte((byte) -123).toString());
     }
+
+	class MutableByteTestTestEqualsAdapterImpl implements MutableTestTestEqualsAdapter<MutableByte> {
+		public boolean equals(MutableByte mutNumA, Object mutNumA1) {
+			return mutNumA.equals(mutNumA1);
+		}
+
+		public Number valueOf(byte byte1) {
+			return Byte.valueOf(byte1);
+		}
+	}
+
+	public void mutableByteTestTestAddAndGetValuePrimitiveTemplate(
+			MutableByteTestTestAddAndGetValuePrimitiveAdapter adapter, int i1) {
+		final MutableByte mutableByte = new MutableByte((byte) 0);
+		final byte result = adapter.addAndGet(mutableByte, (byte) 1);
+		assertEquals((byte) i1, result);
+		assertEquals((byte) 1, mutableByte.byteValue());
+	}
+
+	interface MutableByteTestTestAddAndGetValuePrimitiveAdapter {
+		byte addAndGet(MutableByte mutableByte1, byte byte1);
+	}
+
+	class MutableByteTestTestGetAndAddValuePrimitiveAdapterImpl
+			implements MutableByteTestTestAddAndGetValuePrimitiveAdapter {
+		public byte addAndGet(MutableByte mutableByte, byte byte1) {
+			return mutableByte.getAndAdd(byte1);
+		}
+	}
+
+	class MutableByteTestTestAddAndGetValuePrimitiveAdapterImpl
+			implements MutableByteTestTestAddAndGetValuePrimitiveAdapter {
+		public byte addAndGet(MutableByte mutableByte, byte byte1) {
+			return mutableByte.addAndGet(byte1);
+		}
+	}
+
+	public void mutableByteTestTestAddAndGetValueObjectTemplate(MutableByteTestTestAddAndGetValueObjectAdapter adapter,
+			int i1) {
+		final MutableByte mutableByte = new MutableByte((byte) 0);
+		final byte result = adapter.addAndGet(mutableByte, Byte.valueOf((byte) 1));
+		assertEquals((byte) i1, result);
+		assertEquals((byte) 1, mutableByte.byteValue());
+	}
+
+	interface MutableByteTestTestAddAndGetValueObjectAdapter {
+		byte addAndGet(MutableByte mutableByte1, Number number1);
+	}
+
+	class MutableByteTestTestGetAndAddValueObjectAdapterImpl implements MutableByteTestTestAddAndGetValueObjectAdapter {
+		public byte addAndGet(MutableByte mutableByte, Number number1) {
+			return mutableByte.getAndAdd(number1);
+		}
+	}
+
+	class MutableByteTestTestAddAndGetValueObjectAdapterImpl implements MutableByteTestTestAddAndGetValueObjectAdapter {
+		public byte addAndGet(MutableByte mutableByte, Number number1) {
+			return mutableByte.addAndGet(number1);
+		}
+	}
 
 }

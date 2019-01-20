@@ -16,6 +16,8 @@
  */
 package org.apache.commons.lang3;
 
+import java.lang.String;
+import java.lang.CharSequence;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
@@ -272,16 +274,11 @@ public class StringUtilsEqualsIndexOfTest  {
         assertTrue(StringUtils.compareIgnoreCase("abc", "AB ", false) > 0);
     }
 
-    //-----------------------------------------------------------------------
     @Test
-    public void testIndexOf_char() {
-        assertEquals(-1, StringUtils.indexOf(null, ' '));
-        assertEquals(-1, StringUtils.indexOf("", ' '));
-        assertEquals(0, StringUtils.indexOf("aabaabaa", 'a'));
-        assertEquals(2, StringUtils.indexOf("aabaabaa", 'b'));
-
-        assertEquals(2, StringUtils.indexOf(new StringBuilder("aabaabaa"), 'b'));
-    }
+	public void testIndexOf_char() {
+		this.stringUtilsEqualsIndexOfTestTestIndexOf_charTemplate(
+				new StringUtilsEqualsIndexOfTestTestIndexOf_charAdapterImpl(), 0, 2, 2);
+	}
 
     @Test
     public void testIndexOf_charInt() {
@@ -382,32 +379,20 @@ public class StringUtilsEqualsIndexOfTest  {
     }
 
     /**
-     * See http://www.oracle.com/technetwork/articles/javase/supplementary-142654.html
-     */
-    @Test
-    public void testIndexOfAny_StringCharArrayWithSupplementaryChars() {
-        assertEquals(0, StringUtils.indexOfAny(CharU20000 + CharU20001, CharU20000.toCharArray()));
-        assertEquals(2, StringUtils.indexOfAny(CharU20000 + CharU20001, CharU20001.toCharArray()));
-        assertEquals(0, StringUtils.indexOfAny(CharU20000, CharU20000.toCharArray()));
-        assertEquals(-1, StringUtils.indexOfAny(CharU20000, CharU20001.toCharArray()));
-    }
+	 * See http://www.oracle.com/technetwork/articles/javase/supplementary-142654.html
+	 */
+	@Test
+	public void testIndexOfAny_StringCharArrayWithSupplementaryChars() {
+		this.stringUtilsEqualsIndexOfTestTestIndexOfStringCharArrayWithSupplementaryCharsTemplate(
+				new StringUtilsEqualsIndexOfTestTestIndexOfAny_StringCharArrayWithSupplementaryCharsAdapterImpl(),
+				CharU20000, CharU20001, CharU20000, CharU20001);
+	}
 
     @Test
-    public void testIndexOfAny_StringString() {
-        assertEquals(-1, StringUtils.indexOfAny(null, (String) null));
-        assertEquals(-1, StringUtils.indexOfAny(null, ""));
-        assertEquals(-1, StringUtils.indexOfAny(null, "ab"));
-
-        assertEquals(-1, StringUtils.indexOfAny("", (String) null));
-        assertEquals(-1, StringUtils.indexOfAny("", ""));
-        assertEquals(-1, StringUtils.indexOfAny("", "ab"));
-
-        assertEquals(-1, StringUtils.indexOfAny("zzabyycdxx", (String) null));
-        assertEquals(-1, StringUtils.indexOfAny("zzabyycdxx", ""));
-        assertEquals(0, StringUtils.indexOfAny("zzabyycdxx", "za"));
-        assertEquals(3, StringUtils.indexOfAny("zzabyycdxx", "by"));
-        assertEquals(-1, StringUtils.indexOfAny("ab", "z"));
-    }
+	public void testIndexOfAny_StringString() {
+		this.stringUtilsEqualsIndexOfTestTestIndexOfStringStringTemplate(
+				new StringUtilsEqualsIndexOfTestTestIndexOfAny_StringStringAdapterImpl(), 0, 3, -1);
+	}
 
     @Test
     public void testIndexOfAny_StringStringArray() {
@@ -428,15 +413,14 @@ public class StringUtilsEqualsIndexOfTest  {
     }
 
     /**
-     * See http://www.oracle.com/technetwork/articles/javase/supplementary-142654.html
-     */
-    @Test
-    public void testIndexOfAny_StringStringWithSupplementaryChars() {
-        assertEquals(0, StringUtils.indexOfAny(CharU20000 + CharU20001, CharU20000));
-        assertEquals(2, StringUtils.indexOfAny(CharU20000 + CharU20001, CharU20001));
-        assertEquals(0, StringUtils.indexOfAny(CharU20000, CharU20000));
-        assertEquals(-1, StringUtils.indexOfAny(CharU20000, CharU20001));
-    }
+	 * See http://www.oracle.com/technetwork/articles/javase/supplementary-142654.html
+	 */
+	@Test
+	public void testIndexOfAny_StringStringWithSupplementaryChars() {
+		this.stringUtilsEqualsIndexOfTestTestIndexOfStringStringWithSupplementaryCharsTemplate(
+				new StringUtilsEqualsIndexOfTestTestIndexOfAny_StringStringWithSupplementaryCharsAdapterImpl(),
+				CharU20000, CharU20001, CharU20000, CharU20001);
+	}
 
     @Test
     public void testIndexOfAnyBut_StringCharArray() {
@@ -457,37 +441,24 @@ public class StringUtilsEqualsIndexOfTest  {
     }
 
     @Test
-    public void testIndexOfAnyBut_StringCharArrayWithSupplementaryChars() {
-        assertEquals(2, StringUtils.indexOfAnyBut(CharU20000 + CharU20001, CharU20000.toCharArray()));
-        assertEquals(0, StringUtils.indexOfAnyBut(CharU20000 + CharU20001, CharU20001.toCharArray()));
-        assertEquals(-1, StringUtils.indexOfAnyBut(CharU20000, CharU20000.toCharArray()));
-        assertEquals(0, StringUtils.indexOfAnyBut(CharU20000, CharU20001.toCharArray()));
-    }
+	public void testIndexOfAnyBut_StringCharArrayWithSupplementaryChars() {
+		this.stringUtilsEqualsIndexOfTestTestIndexOfStringCharArrayWithSupplementaryCharsTemplate(
+				new StringUtilsEqualsIndexOfTestTestIndexOfAnyBut_StringCharArrayWithSupplementaryCharsAdapterImpl(),
+				CharU20001, CharU20000, CharU20001, CharU20000);
+	}
 
     @Test
-    public void testIndexOfAnyBut_StringString() {
-        assertEquals(-1, StringUtils.indexOfAnyBut(null, (String) null));
-        assertEquals(-1, StringUtils.indexOfAnyBut(null, ""));
-        assertEquals(-1, StringUtils.indexOfAnyBut(null, "ab"));
-
-        assertEquals(-1, StringUtils.indexOfAnyBut("", (String) null));
-        assertEquals(-1, StringUtils.indexOfAnyBut("", ""));
-        assertEquals(-1, StringUtils.indexOfAnyBut("", "ab"));
-
-        assertEquals(-1, StringUtils.indexOfAnyBut("zzabyycdxx", (String) null));
-        assertEquals(-1, StringUtils.indexOfAnyBut("zzabyycdxx", ""));
-        assertEquals(3, StringUtils.indexOfAnyBut("zzabyycdxx", "za"));
-        assertEquals(0, StringUtils.indexOfAnyBut("zzabyycdxx", "by"));
-        assertEquals(0, StringUtils.indexOfAnyBut("ab", "z"));
-    }
+	public void testIndexOfAnyBut_StringString() {
+		this.stringUtilsEqualsIndexOfTestTestIndexOfStringStringTemplate(
+				new StringUtilsEqualsIndexOfTestTestIndexOfAnyBut_StringStringAdapterImpl(), 3, 0, 0);
+	}
 
     @Test
-    public void testIndexOfAnyBut_StringStringWithSupplementaryChars() {
-        assertEquals(2, StringUtils.indexOfAnyBut(CharU20000 + CharU20001, CharU20000));
-        assertEquals(0, StringUtils.indexOfAnyBut(CharU20000 + CharU20001, CharU20001));
-        assertEquals(-1, StringUtils.indexOfAnyBut(CharU20000, CharU20000));
-        assertEquals(0, StringUtils.indexOfAnyBut(CharU20000, CharU20001));
-    }
+	public void testIndexOfAnyBut_StringStringWithSupplementaryChars() {
+		this.stringUtilsEqualsIndexOfTestTestIndexOfStringStringWithSupplementaryCharsTemplate(
+				new StringUtilsEqualsIndexOfTestTestIndexOfAnyBut_StringStringWithSupplementaryCharsAdapterImpl(),
+				CharU20001, CharU20000, CharU20001, CharU20000);
+	}
 
     @Test
     public void testIndexOfIgnoreCase_String() {
@@ -524,14 +495,10 @@ public class StringUtilsEqualsIndexOfTest  {
     }
 
     @Test
-    public void testLastIndexOf_char() {
-        assertEquals(-1, StringUtils.lastIndexOf(null, ' '));
-        assertEquals(-1, StringUtils.lastIndexOf("", ' '));
-        assertEquals(7, StringUtils.lastIndexOf("aabaabaa", 'a'));
-        assertEquals(5, StringUtils.lastIndexOf("aabaabaa", 'b'));
-
-        assertEquals(5, StringUtils.lastIndexOf(new StringBuilder("aabaabaa"), 'b'));
-    }
+	public void testLastIndexOf_char() {
+		this.stringUtilsEqualsIndexOfTestTestIndexOf_charTemplate(
+				new StringUtilsEqualsIndexOfTestTestLastIndexOf_charAdapterImpl(), 7, 5, 5);
+	}
 
     @Test
     public void testLastIndexOf_charInt() {
@@ -809,4 +776,118 @@ public class StringUtilsEqualsIndexOfTest  {
         assertEquals(2, StringUtils.ordinalIndexOf("abababab", "abab", 2));
         assertEquals(4, StringUtils.ordinalIndexOf("abababab", "abab", 3));
     }
+
+	public void stringUtilsEqualsIndexOfTestTestIndexOfStringStringTemplate(
+			StringUtilsEqualsIndexOfTestTestIndexOfStringStringAdapter adapter, int i1, int i2, int i3) {
+		assertEquals(-1, adapter.indexOfAny(null, (String) null));
+		assertEquals(-1, adapter.indexOfAny(null, ""));
+		assertEquals(-1, adapter.indexOfAny(null, "ab"));
+		assertEquals(-1, adapter.indexOfAny("", (String) null));
+		assertEquals(-1, adapter.indexOfAny("", ""));
+		assertEquals(-1, adapter.indexOfAny("", "ab"));
+		assertEquals(-1, adapter.indexOfAny("zzabyycdxx", (String) null));
+		assertEquals(-1, adapter.indexOfAny("zzabyycdxx", ""));
+		assertEquals(i1, adapter.indexOfAny("zzabyycdxx", "za"));
+		assertEquals(i2, adapter.indexOfAny("zzabyycdxx", "by"));
+		assertEquals(i3, adapter.indexOfAny("ab", "z"));
+	}
+
+	interface StringUtilsEqualsIndexOfTestTestIndexOfStringStringAdapter {
+		int indexOfAny(CharSequence charSequence1, String string1);
+	}
+
+	class StringUtilsEqualsIndexOfTestTestIndexOfAny_StringStringAdapterImpl
+			implements StringUtilsEqualsIndexOfTestTestIndexOfStringStringAdapter {
+		public int indexOfAny(CharSequence charSequence1, String string1) {
+			return StringUtils.indexOfAny(charSequence1, string1);
+		}
+	}
+
+	class StringUtilsEqualsIndexOfTestTestIndexOfAnyBut_StringStringAdapterImpl
+			implements StringUtilsEqualsIndexOfTestTestIndexOfStringStringAdapter {
+		public int indexOfAny(CharSequence charSequence1, String string1) {
+			return StringUtils.indexOfAnyBut(charSequence1, string1);
+		}
+	}
+
+	public void stringUtilsEqualsIndexOfTestTestIndexOf_charTemplate(
+			StringUtilsEqualsIndexOfTestTestIndexOf_charAdapter adapter, int i1, int i2, int i3) {
+		assertEquals(-1, adapter.indexOf(null, ' '));
+		assertEquals(-1, adapter.indexOf("", ' '));
+		assertEquals(i1, adapter.indexOf("aabaabaa", 'a'));
+		assertEquals(i2, adapter.indexOf("aabaabaa", 'b'));
+		assertEquals(i3, adapter.indexOf(new StringBuilder("aabaabaa"), 'b'));
+	}
+
+	interface StringUtilsEqualsIndexOfTestTestIndexOf_charAdapter {
+		int indexOf(CharSequence charSequence1, int i1);
+	}
+
+	class StringUtilsEqualsIndexOfTestTestIndexOf_charAdapterImpl
+			implements StringUtilsEqualsIndexOfTestTestIndexOf_charAdapter {
+		public int indexOf(CharSequence charSequence1, int i1) {
+			return StringUtils.indexOf(charSequence1, i1);
+		}
+	}
+
+	class StringUtilsEqualsIndexOfTestTestLastIndexOf_charAdapterImpl
+			implements StringUtilsEqualsIndexOfTestTestIndexOf_charAdapter {
+		public int indexOf(CharSequence charSequence1, int i1) {
+			return StringUtils.lastIndexOf(charSequence1, i1);
+		}
+	}
+
+	public void stringUtilsEqualsIndexOfTestTestIndexOfStringCharArrayWithSupplementaryCharsTemplate(
+			StringUtilsEqualsIndexOfTestTestIndexOfStringCharArrayWithSupplementaryCharsAdapter adapter, String string1,
+			String string2, String string3, String string4) {
+		assertEquals(0, adapter.indexOfAny(CharU20000 + CharU20001, string1.toCharArray()));
+		assertEquals(2, adapter.indexOfAny(CharU20000 + CharU20001, string2.toCharArray()));
+		assertEquals(0, adapter.indexOfAny(CharU20000, string3.toCharArray()));
+		assertEquals(-1, adapter.indexOfAny(CharU20000, string4.toCharArray()));
+	}
+
+	interface StringUtilsEqualsIndexOfTestTestIndexOfStringCharArrayWithSupplementaryCharsAdapter {
+		int indexOfAny(CharSequence charSequence1, char... charArray1);
+	}
+
+	class StringUtilsEqualsIndexOfTestTestIndexOfAny_StringCharArrayWithSupplementaryCharsAdapterImpl
+			implements StringUtilsEqualsIndexOfTestTestIndexOfStringCharArrayWithSupplementaryCharsAdapter {
+		public int indexOfAny(CharSequence charSequence1, char... c1) {
+			return StringUtils.indexOfAny(charSequence1, c1);
+		}
+	}
+
+	class StringUtilsEqualsIndexOfTestTestIndexOfAnyBut_StringCharArrayWithSupplementaryCharsAdapterImpl
+			implements StringUtilsEqualsIndexOfTestTestIndexOfStringCharArrayWithSupplementaryCharsAdapter {
+		public int indexOfAny(CharSequence charSequence1, char... c1) {
+			return StringUtils.indexOfAnyBut(charSequence1, c1);
+		}
+	}
+
+	public void stringUtilsEqualsIndexOfTestTestIndexOfStringStringWithSupplementaryCharsTemplate(
+			StringUtilsEqualsIndexOfTestTestIndexOfStringStringWithSupplementaryCharsAdapter adapter, String string1,
+			String string2, String string3, String string4) {
+		assertEquals(0, adapter.indexOfAny(CharU20000 + CharU20001, string1));
+		assertEquals(2, adapter.indexOfAny(CharU20000 + CharU20001, string2));
+		assertEquals(0, adapter.indexOfAny(CharU20000, string3));
+		assertEquals(-1, adapter.indexOfAny(CharU20000, string4));
+	}
+
+	interface StringUtilsEqualsIndexOfTestTestIndexOfStringStringWithSupplementaryCharsAdapter {
+		int indexOfAny(CharSequence charSequence1, String string1);
+	}
+
+	class StringUtilsEqualsIndexOfTestTestIndexOfAny_StringStringWithSupplementaryCharsAdapterImpl
+			implements StringUtilsEqualsIndexOfTestTestIndexOfStringStringWithSupplementaryCharsAdapter {
+		public int indexOfAny(CharSequence charSequence1, String CharU20000) {
+			return StringUtils.indexOfAny(charSequence1, CharU20000);
+		}
+	}
+
+	class StringUtilsEqualsIndexOfTestTestIndexOfAnyBut_StringStringWithSupplementaryCharsAdapterImpl
+			implements StringUtilsEqualsIndexOfTestTestIndexOfStringStringWithSupplementaryCharsAdapter {
+		public int indexOfAny(CharSequence charSequence1, String CharU20001) {
+			return StringUtils.indexOfAnyBut(charSequence1, CharU20001);
+		}
+	}
 }

@@ -29,19 +29,12 @@ import static org.junit.Assert.assertTrue;
  */
 public class MutableDoubleTest {
 
-    // ----------------------------------------------------------------
     @Test
-    public void testConstructors() {
-        assertEquals(0d, new MutableDouble().doubleValue(), 0.0001d);
-
-        assertEquals(1d, new MutableDouble(1d).doubleValue(), 0.0001d);
-
-        assertEquals(2d, new MutableDouble(Double.valueOf(2d)).doubleValue(), 0.0001d);
-        assertEquals(3d, new MutableDouble(new MutableDouble(3d)).doubleValue(), 0.0001d);
-
-        assertEquals(2d, new MutableDouble("2.0").doubleValue(), 0.0001d);
-
-    }
+	public void testConstructors() throws Exception {
+		MutableTestTestConstructorsTemplate.mutableTestTestConstructorsTemplate(
+				new MutableDoubleTestTestConstructorsAdapterImpl(), 0d, MutableDouble.class, 0.0001d, 1d, double.class,
+				0.0001d, 2d, 0.0001d, 3d, 0.0001d, 2d, 0.0001d);
+	}
 
     @Test(expected=NullPointerException.class)
     public void testConstructorNull() {
@@ -74,16 +67,10 @@ public class MutableDoubleTest {
     }
 
     @Test
-    public void testNanInfinite() {
-        MutableDouble mutNum = new MutableDouble(Double.NaN);
-        assertTrue(mutNum.isNaN());
-
-        mutNum = new MutableDouble(Double.POSITIVE_INFINITY);
-        assertTrue(mutNum.isInfinite());
-
-        mutNum = new MutableDouble(Double.NEGATIVE_INFINITY);
-        assertTrue(mutNum.isInfinite());
-    }
+	public void testNanInfinite() throws Exception {
+		MutableTestTestNanInfiniteTemplate.mutableTestTestNanInfiniteTemplate(
+				new MutableDoubleTestTestNanInfiniteAdapterImpl(), MutableDouble.class, double.class);
+	}
 
     @Test
     public void testEquals() {
@@ -280,5 +267,21 @@ public class MutableDoubleTest {
         assertEquals("10.0", new MutableDouble(10d).toString());
         assertEquals("-123.0", new MutableDouble(-123d).toString());
     }
+
+	class MutableDoubleTestTestConstructorsAdapterImpl implements MutableTestTestConstructorsAdapter<MutableDouble> {
+		public double value(MutableDouble tMutableNumber1) {
+			return tMutableNumber1.doubleValue();
+		}
+	}
+
+	class MutableDoubleTestTestNanInfiniteAdapterImpl implements MutableTestTestNanInfiniteAdapter<MutableDouble> {
+		public boolean isNaN(MutableDouble mutNum) {
+			return mutNum.isNaN();
+		}
+
+		public boolean isInfinite(MutableDouble mutNum) {
+			return mutNum.isInfinite();
+		}
+	}
 
 }

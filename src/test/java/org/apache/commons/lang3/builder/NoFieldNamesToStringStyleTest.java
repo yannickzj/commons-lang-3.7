@@ -80,14 +80,9 @@ public class NoFieldNamesToStringStyleTest {
     }
 
     @Test
-    public void testPerson() {
-        final Person p = new Person();
-        p.name = "Ron Paul";
-        p.age = 72;
-        p.smoker = false;
-        final String pBaseStr = p.getClass().getName() + "@" + Integer.toHexString(System.identityHashCode(p));
-        assertEquals(pBaseStr + "[Ron Paul,72,false]", new ToStringBuilder(p).append("name", p.name).append("age", p.age).append("smoker", p.smoker).toString());
-    }
+	public void testPerson() {
+		ToStringStyleTestTestPersonTemplate.toStringStyleTestTestPersonTemplate("Ron Paul", 72, "[Ron Paul,72,false]");
+	}
 
     @Test
     public void testLong() {

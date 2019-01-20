@@ -16,6 +16,8 @@
  */
 package org.apache.commons.lang3.mutable;
 
+import java.lang.String;
+import java.lang.Number;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -99,25 +101,16 @@ public class MutableIntTest {
     }
 
     @Test
-    public void testHashCode() {
-        final MutableInt mutNumA = new MutableInt(0);
-        final MutableInt mutNumB = new MutableInt(0);
-        final MutableInt mutNumC = new MutableInt(1);
-
-        assertTrue(mutNumA.hashCode() == mutNumA.hashCode());
-        assertTrue(mutNumA.hashCode() == mutNumB.hashCode());
-        assertFalse(mutNumA.hashCode() == mutNumC.hashCode());
-        assertTrue(mutNumA.hashCode() == Integer.valueOf(0).hashCode());
-    }
+	public void testHashCode() throws Exception {
+		MutableTestTestHashCodeTemplate.mutableTestTestHashCodeTemplate(new MutableIntTestTestHashCodeAdapterImpl(),
+				MutableInt.class, int.class);
+	}
 
     @Test
-    public void testCompareTo() {
-        final MutableInt mutNum = new MutableInt(0);
-
-        assertEquals(0, mutNum.compareTo(new MutableInt(0)));
-        assertEquals(+1, mutNum.compareTo(new MutableInt(-1)));
-        assertEquals(-1, mutNum.compareTo(new MutableInt(1)));
-    }
+	public void testCompareTo() throws Exception {
+		MutableTestTestCompareToTemplate.mutableTestTestCompareToTemplate(new MutableIntTestTestCompareToAdapterImpl(),
+				MutableInt.class, int.class);
+	}
 
     @Test(expected=NullPointerException.class)
     public void testCompareToNull() {
@@ -273,10 +266,35 @@ public class MutableIntTest {
     }
 
     @Test
-    public void testToString() {
-        assertEquals("0", new MutableInt(0).toString());
-        assertEquals("10", new MutableInt(10).toString());
-        assertEquals("-123", new MutableInt(-123).toString());
-    }
+	public void testToString() throws Exception {
+		MutableTestTestToStringTemplate.mutableTestTestToStringTemplate(new MutableIntTestTestToStringAdapterImpl(),
+				MutableInt.class, int.class);
+	}
+
+	class MutableIntTestTestHashCodeAdapterImpl implements MutableTestTestHashCodeAdapter<MutableInt> {
+		public int hashCode(MutableInt mutNumA) {
+			return mutNumA.hashCode();
+		}
+
+		public Number valueOf(int i1) {
+			return Integer.valueOf(i1);
+		}
+
+		public int hashCode1(Number number1) {
+			return number1.hashCode();
+		}
+	}
+
+	class MutableIntTestTestCompareToAdapterImpl implements MutableTestTestCompareToAdapter<MutableInt> {
+		public int compareTo(MutableInt mutNum, MutableInt tMutableNumber1) {
+			return mutNum.compareTo(tMutableNumber1);
+		}
+	}
+
+	class MutableIntTestTestToStringAdapterImpl implements MutableTestTestToStringAdapter<MutableInt> {
+		public String toString(MutableInt tMutableNumber1) {
+			return tMutableNumber1.toString();
+		}
+	}
 
 }

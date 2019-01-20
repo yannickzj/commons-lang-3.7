@@ -16,6 +16,7 @@
  */
 package org.apache.commons.lang3;
 
+import java.lang.String;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -43,23 +44,11 @@ public class CharSetUtilsTest  {
         assertFalse(Modifier.isFinal(CharSetUtils.class.getModifiers()));
     }
 
-    //-----------------------------------------------------------------------
     @Test
-    public void testSqueeze_StringString() {
-        assertNull(CharSetUtils.squeeze(null, (String) null));
-        assertNull(CharSetUtils.squeeze(null, ""));
-
-        assertEquals("", CharSetUtils.squeeze("", (String) null));
-        assertEquals("", CharSetUtils.squeeze("", ""));
-        assertEquals("", CharSetUtils.squeeze("", "a-e"));
-
-        assertEquals("hello", CharSetUtils.squeeze("hello", (String) null));
-        assertEquals("hello", CharSetUtils.squeeze("hello", ""));
-        assertEquals("hello", CharSetUtils.squeeze("hello", "a-e"));
-        assertEquals("helo", CharSetUtils.squeeze("hello", "l-p"));
-        assertEquals("heloo", CharSetUtils.squeeze("helloo", "l"));
-        assertEquals("hello", CharSetUtils.squeeze("helloo", "^l"));
-    }
+	public void testSqueeze_StringString() {
+		this.charSetUtilsTestTestStringStringTemplate(new CharSetUtilsTestTestSqueeze_StringStringAdapterImpl(),
+				"hello", "hello", "a-e", "helo", "l-p", "heloo", "helloo", "l", "helloo", "^l");
+	}
 
     @Test
     public void testSqueeze_StringStringarray() {
@@ -164,23 +153,11 @@ public class CharSetUtilsTest  {
         assertEquals(0, CharSetUtils.count("hello", ""));
     }
 
-    //-----------------------------------------------------------------------
     @Test
-    public void testKeep_StringString() {
-        assertNull(CharSetUtils.keep(null, (String) null));
-        assertNull(CharSetUtils.keep(null, ""));
-
-        assertEquals("", CharSetUtils.keep("", (String) null));
-        assertEquals("", CharSetUtils.keep("", ""));
-        assertEquals("", CharSetUtils.keep("", "a-e"));
-
-        assertEquals("", CharSetUtils.keep("hello", (String) null));
-        assertEquals("", CharSetUtils.keep("hello", ""));
-        assertEquals("", CharSetUtils.keep("hello", "xyz"));
-        assertEquals("hello", CharSetUtils.keep("hello", "a-z"));
-        assertEquals("hello", CharSetUtils.keep("hello", "oleh"));
-        assertEquals("ell", CharSetUtils.keep("hello", "el"));
-    }
+	public void testKeep_StringString() {
+		this.charSetUtilsTestTestStringStringTemplate(new CharSetUtilsTestTestKeep_StringStringAdapterImpl(), "", "",
+				"a-z", "", "xyz", "ell", "hello", "el", "hello", "oleh");
+	}
 
     @Test
     public void testKeep_StringStringarray() {
@@ -249,5 +226,37 @@ public class CharSetUtilsTest  {
         assertEquals("", CharSetUtils.delete("----", "-"));
         assertEquals("heo", CharSetUtils.delete("hello", "l"));
     }
+
+	public void charSetUtilsTestTestStringStringTemplate(CharSetUtilsTestTestStringStringAdapter adapter,
+			String string1, String string2, String string3, String string4, String string5, String string6,
+			String string7, String string8, String string9, String string10) {
+		assertNull(adapter.action1(null, (String) null));
+		assertNull(adapter.action1(null, ""));
+		assertEquals("", adapter.action1("", (String) null));
+		assertEquals("", adapter.action1("", ""));
+		assertEquals("", adapter.action1("", "a-e"));
+		assertEquals(string1, adapter.action1("hello", (String) null));
+		assertEquals(string2, adapter.action1("hello", ""));
+		assertEquals("hello", adapter.action1("hello", string3));
+		assertEquals(string4, adapter.action1("hello", string5));
+		assertEquals(string6, adapter.action1(string7, string8));
+		assertEquals("hello", adapter.action1(string9, string10));
+	}
+
+	interface CharSetUtilsTestTestStringStringAdapter {
+		String action1(String string1, String... stringArray1);
+	}
+
+	class CharSetUtilsTestTestSqueeze_StringStringAdapterImpl implements CharSetUtilsTestTestStringStringAdapter {
+		public String action1(String string1, String... string2) {
+			return CharSetUtils.squeeze(string1, string2);
+		}
+	}
+
+	class CharSetUtilsTestTestKeep_StringStringAdapterImpl implements CharSetUtilsTestTestStringStringAdapter {
+		public String action1(String string1, String... string2) {
+			return CharSetUtils.keep(string1, string2);
+		}
+	}
 
 }

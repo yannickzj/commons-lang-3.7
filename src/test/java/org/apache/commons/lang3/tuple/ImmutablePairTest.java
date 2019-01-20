@@ -64,15 +64,9 @@ public class ImmutablePairTest {
     }
 
     @Test
-    public void testEquals() throws Exception {
-        assertEquals(ImmutablePair.of(null, "foo"), ImmutablePair.of(null, "foo"));
-        assertFalse(ImmutablePair.of("foo", 0).equals(ImmutablePair.of("foo", null)));
-        assertFalse(ImmutablePair.of("foo", "bar").equals(ImmutablePair.of("xyz", "bar")));
-
-        final ImmutablePair<String, String> p = ImmutablePair.of("foo", "bar");
-        assertTrue(p.equals(p));
-        assertFalse(p.equals(new Object()));
-    }
+	public void testEquals() throws Exception {
+		PairTestTestEqualsTemplate.<ImmutablePair<String, String>>pairTestTestEqualsTemplate();
+	}
 
     @Test
     public void testHashCode() throws Exception {
@@ -118,12 +112,9 @@ public class ImmutablePairTest {
     }
 
     @Test
-    public void testToString() throws Exception {
-        assertEquals("(null,null)", ImmutablePair.of(null, null).toString());
-        assertEquals("(null,two)", ImmutablePair.of(null, "two").toString());
-        assertEquals("(one,null)", ImmutablePair.of("one", null).toString());
-        assertEquals("(one,two)", ImmutablePair.of("one", "two").toString());
-    }
+	public void testToString() throws Exception {
+		PairTestTestToStringTemplate.pairTestTestToStringTemplate();
+	}
 
     @Test
     @SuppressWarnings("unchecked")

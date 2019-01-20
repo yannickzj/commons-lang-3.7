@@ -71,45 +71,43 @@ public class FastDateParser_MoreOrLessTest {
     }
 
     @Test
-    public void testInputHasWrongCharacters() {
-        final FastDateParser parser = new FastDateParser("MM-dd-yyy", TimeZone.getDefault(), Locale.getDefault());
-        final ParsePosition parsePosition = new ParsePosition(0);
-        assertNull(parser.parse("03/23/1961", parsePosition));
-        assertEquals(2, parsePosition.getErrorIndex());
-    }
+	public void testInputHasWrongCharacters() {
+		this.fastDateParser_MoreOrLessTestTestInputHasCharactersTemplate("MM-dd-yyy", "03/23/1961", 2);
+	}
 
     @Test
-    public void testInputHasLessCharacters() {
-        final FastDateParser parser = new FastDateParser("MM/dd/yyy", TimeZone.getDefault(), Locale.getDefault());
-        final ParsePosition parsePosition = new ParsePosition(0);
-        assertNull(parser.parse("03/23", parsePosition));
-        assertEquals(5, parsePosition.getErrorIndex());
-    }
+	public void testInputHasLessCharacters() {
+		this.fastDateParser_MoreOrLessTestTestInputHasCharactersTemplate("MM/dd/yyy", "03/23", 5);
+	}
 
     @Test
-    public void testInputHasWrongTimeZone() {
-        final FastDateParser parser = new FastDateParser("mm:ss z", NEW_YORK, Locale.US);
-
-        final String input = "11:23 Pacific Standard Time";
-        final ParsePosition parsePosition = new ParsePosition(0);
-        assertNotNull(parser.parse(input, parsePosition));
-        assertEquals(input.length(), parsePosition.getIndex());
-
-        parsePosition.setIndex(0);
-        assertNull(parser.parse( "11:23 Pacific Standard ", parsePosition));
-        assertEquals(6, parsePosition.getErrorIndex());
-    }
+	public void testInputHasWrongTimeZone() {
+		this.fastDateParser_MoreOrLessTestTestInputHasWrongTemplate("mm:ss z", "11:23 Pacific Standard Time",
+				"11:23 Pacific Standard ", 6);
+	}
 
     @Test
-    public void testInputHasWrongDay() {
-        final FastDateParser parser = new FastDateParser("EEEE, MM/dd/yyy", NEW_YORK, Locale.US);
-        final String input = "Thursday, 03/23/61";
-        final ParsePosition parsePosition = new ParsePosition(0);
-        assertNotNull(parser.parse(input, parsePosition));
-        assertEquals(input.length(), parsePosition.getIndex());
+	public void testInputHasWrongDay() {
+		this.fastDateParser_MoreOrLessTestTestInputHasWrongTemplate("EEEE, MM/dd/yyy", "Thursday, 03/23/61",
+				"Thorsday, 03/23/61", 0);
+	}
 
-        parsePosition.setIndex(0);
-        assertNull(parser.parse( "Thorsday, 03/23/61", parsePosition));
-        assertEquals(0, parsePosition.getErrorIndex());
-    }
+	public void fastDateParser_MoreOrLessTestTestInputHasWrongTemplate(String string1, String string2, String string3,
+			int i1) {
+		final FastDateParser parser = new FastDateParser(string1, NEW_YORK, Locale.US);
+		final String input = string2;
+		final ParsePosition parsePosition = new ParsePosition(0);
+		assertNotNull(parser.parse(input, parsePosition));
+		assertEquals(input.length(), parsePosition.getIndex());
+		parsePosition.setIndex(0);
+		assertNull(parser.parse(string3, parsePosition));
+		assertEquals(i1, parsePosition.getErrorIndex());
+	}
+
+	public void fastDateParser_MoreOrLessTestTestInputHasCharactersTemplate(String string1, String string2, int i1) {
+		final FastDateParser parser = new FastDateParser(string1, TimeZone.getDefault(), Locale.getDefault());
+		final ParsePosition parsePosition = new ParsePosition(0);
+		assertNull(parser.parse(string2, parsePosition));
+		assertEquals(i1, parsePosition.getErrorIndex());
+	}
 }

@@ -16,6 +16,8 @@
  */
 package org.apache.commons.lang3.mutable;
 
+import java.lang.Number;
+import java.lang.Object;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -72,22 +74,10 @@ public class MutableShortTest {
     }
 
     @Test
-    public void testEquals() {
-        final MutableShort mutNumA = new MutableShort((short) 0);
-        final MutableShort mutNumB = new MutableShort((short) 0);
-        final MutableShort mutNumC = new MutableShort((short) 1);
-
-        assertTrue(mutNumA.equals(mutNumA));
-        assertTrue(mutNumA.equals(mutNumB));
-        assertTrue(mutNumB.equals(mutNumA));
-        assertTrue(mutNumB.equals(mutNumB));
-        assertFalse(mutNumA.equals(mutNumC));
-        assertFalse(mutNumB.equals(mutNumC));
-        assertTrue(mutNumC.equals(mutNumC));
-        assertFalse(mutNumA.equals(null));
-        assertFalse(mutNumA.equals(Short.valueOf((short) 0)));
-        assertFalse(mutNumA.equals("0"));
-    }
+	public void testEquals() throws Exception {
+		MutableTestTestEqualsTemplate.mutableTestTestEqualsTemplate(new MutableShortTestTestEqualsAdapterImpl(),
+				MutableShort.class, short.class);
+	}
 
     @Test
     public void testHashCode() {
@@ -199,48 +189,33 @@ public class MutableShortTest {
     }
 
     @Test
-    public void testAddValueObject() {
-        final MutableShort mutNum = new MutableShort((short) 1);
-        mutNum.add(Short.valueOf((short) 1));
-
-        assertEquals((short) 2, mutNum.shortValue());
-    }
+	public void testAddValueObject() {
+		this.mutableShortTestTestValueObjectTemplate(new MutableShortTestTestAddValueObjectAdapterImpl(), 2);
+	}
 
     @Test
-    public void testGetAndAddValuePrimitive() {
-        final MutableShort mutableShort = new MutableShort((short)0);
-        final short result = mutableShort.getAndAdd((short) 1);
-
-        assertEquals((short) 0, result);
-        assertEquals((short) 1, mutableShort.shortValue());
-    }
+	public void testGetAndAddValuePrimitive() {
+		this.mutableShortTestTestAddAndGetValuePrimitiveTemplate(
+				new MutableShortTestTestGetAndAddValuePrimitiveAdapterImpl(), 0);
+	}
 
     @Test
-    public void testGetAndAddValueObject() {
-        final MutableShort mutableShort = new MutableShort((short)0);
-        final short result = mutableShort.getAndAdd(Short.valueOf((short) 1));
-
-        assertEquals((short) 0, result);
-        assertEquals((short) 1, mutableShort.shortValue());
-    }
+	public void testGetAndAddValueObject() {
+		this.mutableShortTestTestAddAndGetValueObjectTemplate(new MutableShortTestTestGetAndAddValueObjectAdapterImpl(),
+				0);
+	}
 
     @Test
-    public void testAddAndGetValuePrimitive() {
-        final MutableShort mutableShort = new MutableShort((short) 0);
-        final short result = mutableShort.addAndGet((short) 1);
-
-        assertEquals((short) 1, result);
-        assertEquals((short) 1, mutableShort.shortValue());
-    }
+	public void testAddAndGetValuePrimitive() {
+		this.mutableShortTestTestAddAndGetValuePrimitiveTemplate(
+				new MutableShortTestTestAddAndGetValuePrimitiveAdapterImpl(), 1);
+	}
 
     @Test
-    public void testAddAndGetValueObject() {
-        final MutableShort mutableShort = new MutableShort((short) 0);
-        final short result = mutableShort.addAndGet(Short.valueOf((short) 1));
-
-        assertEquals((short) 1, result);
-        assertEquals((short) 1, mutableShort.shortValue());
-    }
+	public void testAddAndGetValueObject() {
+		this.mutableShortTestTestAddAndGetValueObjectTemplate(new MutableShortTestTestAddAndGetValueObjectAdapterImpl(),
+				1);
+	}
 
     @Test
     public void testSubtractValuePrimitive() {
@@ -251,12 +226,9 @@ public class MutableShortTest {
     }
 
     @Test
-    public void testSubtractValueObject() {
-        final MutableShort mutNum = new MutableShort((short) 1);
-        mutNum.subtract(Short.valueOf((short) 1));
-
-        assertEquals((short) 0, mutNum.shortValue());
-    }
+	public void testSubtractValueObject() {
+		this.mutableShortTestTestValueObjectTemplate(new MutableShortTestTestSubtractValueObjectAdapterImpl(), 0);
+	}
 
     @Test
     public void testToString() {
@@ -264,5 +236,89 @@ public class MutableShortTest {
         assertEquals("10", new MutableShort((short) 10).toString());
         assertEquals("-123", new MutableShort((short) -123).toString());
     }
+
+	class MutableShortTestTestEqualsAdapterImpl implements MutableTestTestEqualsAdapter<MutableShort> {
+		public boolean equals(MutableShort mutNumA, Object mutNumA1) {
+			return mutNumA.equals(mutNumA1);
+		}
+
+		public Number valueOf(byte byte1) {
+			return (Number) Short.valueOf(byte1);
+		}
+	}
+
+	public void mutableShortTestTestAddAndGetValuePrimitiveTemplate(
+			MutableShortTestTestAddAndGetValuePrimitiveAdapter adapter, int i1) {
+		final MutableShort mutableShort = new MutableShort((short) 0);
+		final short result = adapter.addAndGet(mutableShort, (short) 1);
+		assertEquals((short) i1, result);
+		assertEquals((short) 1, mutableShort.shortValue());
+	}
+
+	interface MutableShortTestTestAddAndGetValuePrimitiveAdapter {
+		short addAndGet(MutableShort mutableShort1, short s1);
+	}
+
+	class MutableShortTestTestGetAndAddValuePrimitiveAdapterImpl
+			implements MutableShortTestTestAddAndGetValuePrimitiveAdapter {
+		public short addAndGet(MutableShort mutableShort, short s1) {
+			return mutableShort.getAndAdd(s1);
+		}
+	}
+
+	class MutableShortTestTestAddAndGetValuePrimitiveAdapterImpl
+			implements MutableShortTestTestAddAndGetValuePrimitiveAdapter {
+		public short addAndGet(MutableShort mutableShort, short s1) {
+			return mutableShort.addAndGet(s1);
+		}
+	}
+
+	public void mutableShortTestTestAddAndGetValueObjectTemplate(
+			MutableShortTestTestAddAndGetValueObjectAdapter adapter, int i1) {
+		final MutableShort mutableShort = new MutableShort((short) 0);
+		final short result = adapter.addAndGet(mutableShort, Short.valueOf((short) 1));
+		assertEquals((short) i1, result);
+		assertEquals((short) 1, mutableShort.shortValue());
+	}
+
+	interface MutableShortTestTestAddAndGetValueObjectAdapter {
+		short addAndGet(MutableShort mutableShort1, Number number1);
+	}
+
+	class MutableShortTestTestGetAndAddValueObjectAdapterImpl
+			implements MutableShortTestTestAddAndGetValueObjectAdapter {
+		public short addAndGet(MutableShort mutableShort, Number number1) {
+			return mutableShort.getAndAdd(number1);
+		}
+	}
+
+	class MutableShortTestTestAddAndGetValueObjectAdapterImpl
+			implements MutableShortTestTestAddAndGetValueObjectAdapter {
+		public short addAndGet(MutableShort mutableShort, Number number1) {
+			return mutableShort.addAndGet(number1);
+		}
+	}
+
+	public void mutableShortTestTestValueObjectTemplate(MutableShortTestTestValueObjectAdapter adapter, int i1) {
+		final MutableShort mutNum = new MutableShort((short) 1);
+		adapter.action1(mutNum, Short.valueOf((short) 1));
+		assertEquals((short) i1, mutNum.shortValue());
+	}
+
+	interface MutableShortTestTestValueObjectAdapter {
+		void action1(MutableShort mutableShort1, Number number1);
+	}
+
+	class MutableShortTestTestAddValueObjectAdapterImpl implements MutableShortTestTestValueObjectAdapter {
+		public void action1(MutableShort mutNum, Number number1) {
+			mutNum.add(number1);
+		}
+	}
+
+	class MutableShortTestTestSubtractValueObjectAdapterImpl implements MutableShortTestTestValueObjectAdapter {
+		public void action1(MutableShort mutNum, Number number1) {
+			mutNum.subtract(number1);
+		}
+	}
 
 }

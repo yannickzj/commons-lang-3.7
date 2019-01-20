@@ -43,24 +43,17 @@ public class CharRangeTest  {
         assertTrue(Modifier.isFinal(CharRange.class.getModifiers()));
     }
 
-    //-----------------------------------------------------------------------
     @Test
-    public void testConstructorAccessors_is() {
-        final CharRange rangea = CharRange.is('a');
-        assertEquals('a', rangea.getStart());
-        assertEquals('a', rangea.getEnd());
-        assertFalse(rangea.isNegated());
-        assertEquals("a", rangea.toString());
-    }
+	public void testConstructorAccessors_is() {
+		this.charRangeTestTestConstructorAccessors_isTemplate(new CharRangeTestTestConstructorAccessors_isAdapterImpl(),
+				"a");
+	}
 
     @Test
-    public void testConstructorAccessors_isNot() {
-        final CharRange rangea = CharRange.isNot('a');
-        assertEquals('a', rangea.getStart());
-        assertEquals('a', rangea.getEnd());
-        assertTrue(rangea.isNegated());
-        assertEquals("^a", rangea.toString());
-    }
+	public void testConstructorAccessors_isNot() {
+		this.charRangeTestTestConstructorAccessors_isTemplate(
+				new CharRangeTestTestConstructorAccessors_isNotAdapterImpl(), "^a");
+	}
 
     @Test
     public void testConstructorAccessors_isIn_Same() {
@@ -404,4 +397,41 @@ public class CharRangeTest  {
         final Iterator<Character> aIt = a.iterator();
         aIt.remove();
     }
+
+	public void charRangeTestTestConstructorAccessors_isTemplate(
+			CharRangeTestTestConstructorAccessors_isAdapter adapter, String string1) {
+		final CharRange rangea = adapter.is('a');
+		assertEquals('a', rangea.getStart());
+		assertEquals('a', rangea.getEnd());
+		adapter.assertAction(rangea.isNegated());
+		assertEquals(string1, rangea.toString());
+	}
+
+	interface CharRangeTestTestConstructorAccessors_isAdapter {
+		CharRange is(char c1);
+
+		void assertAction(boolean b1);
+	}
+
+	class CharRangeTestTestConstructorAccessors_isAdapterImpl
+			implements CharRangeTestTestConstructorAccessors_isAdapter {
+		public CharRange is(char c1) {
+			return CharRange.is(c1);
+		}
+
+		public void assertAction(boolean b1) {
+			assertFalse(b1);
+		}
+	}
+
+	class CharRangeTestTestConstructorAccessors_isNotAdapterImpl
+			implements CharRangeTestTestConstructorAccessors_isAdapter {
+		public CharRange is(char c1) {
+			return CharRange.isNot(c1);
+		}
+
+		public void assertAction(boolean b1) {
+			assertTrue(b1);
+		}
+	}
 }

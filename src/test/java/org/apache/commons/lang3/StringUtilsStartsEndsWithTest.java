@@ -16,6 +16,8 @@
  */
 package org.apache.commons.lang3;
 
+import java.lang.String;
+import java.lang.CharSequence;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
@@ -36,52 +38,34 @@ public class StringUtilsStartsEndsWithTest {
     //-----------------------------------------------------------------------
 
     /**
-     * Test StringUtils.startsWith()
-     */
-    @Test
-    public void testStartsWith() {
-        assertTrue("startsWith(null, null)", StringUtils.startsWith(null, null));
-        assertFalse("startsWith(FOOBAR, null)", StringUtils.startsWith(FOOBAR, null));
-        assertFalse("startsWith(null, FOO)",    StringUtils.startsWith(null, FOO));
-        assertTrue("startsWith(FOOBAR, \"\")",  StringUtils.startsWith(FOOBAR, ""));
-
-        assertTrue("startsWith(foobar, foo)",  StringUtils.startsWith(foobar, foo));
-        assertTrue("startsWith(FOOBAR, FOO)",  StringUtils.startsWith(FOOBAR, FOO));
-        assertFalse("startsWith(foobar, FOO)", StringUtils.startsWith(foobar, FOO));
-        assertFalse("startsWith(FOOBAR, foo)", StringUtils.startsWith(FOOBAR, foo));
-
-        assertFalse("startsWith(foo, foobar)", StringUtils.startsWith(foo, foobar));
-        assertFalse("startsWith(foo, foobar)", StringUtils.startsWith(bar, foobar));
-
-        assertFalse("startsWith(foobar, bar)", StringUtils.startsWith(foobar, bar));
-        assertFalse("startsWith(FOOBAR, BAR)", StringUtils.startsWith(FOOBAR, BAR));
-        assertFalse("startsWith(foobar, BAR)", StringUtils.startsWith(foobar, BAR));
-        assertFalse("startsWith(FOOBAR, bar)", StringUtils.startsWith(FOOBAR, bar));
-    }
+	 * Test StringUtils.startsWith()
+	 */
+	@Test
+	public void testStartsWith() {
+		this.stringUtilsStartsEndsWithTestTestStartsWithTemplate(
+				new StringUtilsStartsEndsWithTestTestStartsWithAdapterImpl(), "startsWith(null, null)",
+				"startsWith(FOOBAR, null)", "startsWith(null, FOO)", "startsWith(FOOBAR, \"\")",
+				"startsWith(foobar, foo)", "startsWith(FOOBAR, FOO)", "startsWith(foobar, FOO)",
+				"startsWith(FOOBAR, foo)", "startsWith(foo, foobar)", "startsWith(foo, foobar)",
+				"startsWith(foobar, bar)", "startsWith(FOOBAR, BAR)", "startsWith(foobar, BAR)",
+				"startsWith(FOOBAR, bar)");
+	}
 
     /**
-     * Test StringUtils.testStartsWithIgnoreCase()
-     */
-    @Test
-    public void testStartsWithIgnoreCase() {
-        assertTrue("startsWithIgnoreCase(null, null)",    StringUtils.startsWithIgnoreCase(null, null));
-        assertFalse("startsWithIgnoreCase(FOOBAR, null)", StringUtils.startsWithIgnoreCase(FOOBAR, null));
-        assertFalse("startsWithIgnoreCase(null, FOO)",    StringUtils.startsWithIgnoreCase(null, FOO));
-        assertTrue("startsWithIgnoreCase(FOOBAR, \"\")",  StringUtils.startsWithIgnoreCase(FOOBAR, ""));
-
-        assertTrue("startsWithIgnoreCase(foobar, foo)", StringUtils.startsWithIgnoreCase(foobar, foo));
-        assertTrue("startsWithIgnoreCase(FOOBAR, FOO)", StringUtils.startsWithIgnoreCase(FOOBAR, FOO));
-        assertTrue("startsWithIgnoreCase(foobar, FOO)", StringUtils.startsWithIgnoreCase(foobar, FOO));
-        assertTrue("startsWithIgnoreCase(FOOBAR, foo)", StringUtils.startsWithIgnoreCase(FOOBAR, foo));
-
-        assertFalse("startsWithIgnoreCase(foo, foobar)", StringUtils.startsWithIgnoreCase(foo, foobar));
-        assertFalse("startsWithIgnoreCase(foo, foobar)", StringUtils.startsWithIgnoreCase(bar, foobar));
-
-        assertFalse("startsWithIgnoreCase(foobar, bar)", StringUtils.startsWithIgnoreCase(foobar, bar));
-        assertFalse("startsWithIgnoreCase(FOOBAR, BAR)", StringUtils.startsWithIgnoreCase(FOOBAR, BAR));
-        assertFalse("startsWithIgnoreCase(foobar, BAR)", StringUtils.startsWithIgnoreCase(foobar, BAR));
-        assertFalse("startsWithIgnoreCase(FOOBAR, bar)", StringUtils.startsWithIgnoreCase(FOOBAR, bar));
-    }
+	 * Test StringUtils.testStartsWithIgnoreCase()
+	 */
+	@Test
+	public void testStartsWithIgnoreCase() {
+		this.stringUtilsStartsEndsWithTestTestStartsWithTemplate(
+				new StringUtilsStartsEndsWithTestTestStartsWithIgnoreCaseAdapterImpl(),
+				"startsWithIgnoreCase(null, null)", "startsWithIgnoreCase(FOOBAR, null)",
+				"startsWithIgnoreCase(null, FOO)", "startsWithIgnoreCase(FOOBAR, \"\")",
+				"startsWithIgnoreCase(foobar, foo)", "startsWithIgnoreCase(FOOBAR, FOO)",
+				"startsWithIgnoreCase(foobar, FOO)", "startsWithIgnoreCase(FOOBAR, foo)",
+				"startsWithIgnoreCase(foo, foobar)", "startsWithIgnoreCase(foo, foobar)",
+				"startsWithIgnoreCase(foobar, bar)", "startsWithIgnoreCase(FOOBAR, BAR)",
+				"startsWithIgnoreCase(foobar, BAR)", "startsWithIgnoreCase(FOOBAR, bar)");
+	}
 
     @Test
     public void testStartsWithAny() {
@@ -196,6 +180,54 @@ public class StringUtilsStartsEndsWithTest {
         assertTrue("StringUtils.endsWithAny(abcxyz, StringBuilder(abc), StringBuffer(xyz))", StringUtils.endsWithAny("abcxyz", new StringBuilder("abc"), new StringBuffer("xyz")));
         assertTrue("StringUtils.endsWithAny(StringBuffer(abcxyz), StringBuilder(abc), StringBuffer(xyz))", StringUtils.endsWithAny(new StringBuffer("abcxyz"), new StringBuilder("abc"), new StringBuffer("xyz")));
     }
+
+	public void stringUtilsStartsEndsWithTestTestStartsWithTemplate(
+			StringUtilsStartsEndsWithTestTestStartsWithAdapter adapter, String string1, String string2, String string3,
+			String string4, String string5, String string6, String string7, String string8, String string9,
+			String string10, String string11, String string12, String string13, String string14) {
+		assertTrue(string1, adapter.startsWith(null, null));
+		assertFalse(string2, adapter.startsWith(FOOBAR, null));
+		assertFalse(string3, adapter.startsWith(null, FOO));
+		assertTrue(string4, adapter.startsWith(FOOBAR, ""));
+		assertTrue(string5, adapter.startsWith(foobar, foo));
+		assertTrue(string6, adapter.startsWith(FOOBAR, FOO));
+		adapter.assertAction(string7, adapter.startsWith(foobar, FOO));
+		adapter.assertAction(string8, adapter.startsWith(FOOBAR, foo));
+		assertFalse(string9, adapter.startsWith(foo, foobar));
+		assertFalse(string10, adapter.startsWith(bar, foobar));
+		assertFalse(string11, adapter.startsWith(foobar, bar));
+		assertFalse(string12, adapter.startsWith(FOOBAR, BAR));
+		assertFalse(string13, adapter.startsWith(foobar, BAR));
+		assertFalse(string14, adapter.startsWith(FOOBAR, bar));
+	}
+
+	interface StringUtilsStartsEndsWithTestTestStartsWithAdapter {
+		boolean startsWith(CharSequence charSequence1, CharSequence charSequence2);
+
+		void assertAction(String string1, boolean b1);
+	}
+
+	class StringUtilsStartsEndsWithTestTestStartsWithAdapterImpl
+			implements StringUtilsStartsEndsWithTestTestStartsWithAdapter {
+		public boolean startsWith(CharSequence charSequence1, CharSequence charSequence2) {
+			return StringUtils.startsWith(charSequence1, charSequence2);
+		}
+
+		public void assertAction(String string1, boolean b1) {
+			assertFalse(string1, b1);
+		}
+	}
+
+	class StringUtilsStartsEndsWithTestTestStartsWithIgnoreCaseAdapterImpl
+			implements StringUtilsStartsEndsWithTestTestStartsWithAdapter {
+		public boolean startsWith(CharSequence charSequence1, CharSequence charSequence2) {
+			return StringUtils.startsWithIgnoreCase(charSequence1, charSequence2);
+		}
+
+		public void assertAction(String string1, boolean b1) {
+			assertTrue(string1, b1);
+		}
+	}
 
 
 }

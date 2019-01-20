@@ -17,6 +17,9 @@
 
 package org.apache.commons.lang3.text;
 
+import java.lang.String;
+import java.lang.StringBuilder;
+import java.lang.StringBuffer;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -103,20 +106,10 @@ public class StrBuilderTest {
         assertSame(sb, sb.trim());
     }
 
-    //-----------------------------------------------------------------------
     @Test
-    public void testReadFromReader() throws Exception {
-        String s = "";
-        for (int i = 0; i < 100; ++i) {
-            final StrBuilder sb = new StrBuilder();
-            final int len = sb.readFrom(new StringReader(s));
-
-            assertEquals(s.length(), len);
-            assertEquals(s, sb.toString());
-
-            s += Integer.toString(i);
-        }
-    }
+	public void testReadFromReader() throws Exception {
+		this.strBuilderTestTestReadFromTemplate(StringReader.class);
+	}
 
     @Test
     public void testReadFromReaderAppendsToEnd() throws Exception {
@@ -147,18 +140,9 @@ public class StrBuilderTest {
     }
 
     @Test
-    public void testReadFromReadable() throws Exception {
-        String s = "";
-        for (int i = 0; i < 100; ++i) {
-            final StrBuilder sb = new StrBuilder();
-            final int len = sb.readFrom(new MockReadable(s));
-
-            assertEquals(s.length(), len);
-            assertEquals(s, sb.toString());
-
-            s += Integer.toString(i);
-        }
-    }
+	public void testReadFromReadable() throws Exception {
+		this.strBuilderTestTestReadFromTemplate(StrBuilderTest.MockReadable.class);
+	}
 
     @Test
     public void testReadFromReadableAppendsToEnd() throws Exception {
@@ -617,128 +601,40 @@ public class StrBuilderTest {
         } catch (final IndexOutOfBoundsException e) {}
     }
 
-    //-----------------------------------------------------------------------
     @Test
-    public void testDeleteAll_char() {
-        StrBuilder sb = new StrBuilder("abcbccba");
-        sb.deleteAll('X');
-        assertEquals("abcbccba", sb.toString());
-        sb.deleteAll('a');
-        assertEquals("bcbccb", sb.toString());
-        sb.deleteAll('c');
-        assertEquals("bbb", sb.toString());
-        sb.deleteAll('b');
-        assertEquals("", sb.toString());
-
-        sb = new StrBuilder("");
-        sb.deleteAll('b');
-        assertEquals("", sb.toString());
-    }
+	public void testDeleteAll_char() {
+		this.strBuilderTestTestDeleteTemplate(new StrBuilderTestTestDeleteAll_charAdapterImpl(), "abcbccba", "abcbccba",
+				"bcbccb", "bbb", "");
+	}
 
     @Test
-    public void testDeleteFirst_char() {
-        StrBuilder sb = new StrBuilder("abcba");
-        sb.deleteFirst('X');
-        assertEquals("abcba", sb.toString());
-        sb.deleteFirst('a');
-        assertEquals("bcba", sb.toString());
-        sb.deleteFirst('c');
-        assertEquals("bba", sb.toString());
-        sb.deleteFirst('b');
-        assertEquals("ba", sb.toString());
-
-        sb = new StrBuilder("");
-        sb.deleteFirst('b');
-        assertEquals("", sb.toString());
-    }
-
-    // -----------------------------------------------------------------------
-    @Test
-    public void testDeleteAll_String() {
-        StrBuilder sb = new StrBuilder("abcbccba");
-        sb.deleteAll((String) null);
-        assertEquals("abcbccba", sb.toString());
-        sb.deleteAll("");
-        assertEquals("abcbccba", sb.toString());
-
-        sb.deleteAll("X");
-        assertEquals("abcbccba", sb.toString());
-        sb.deleteAll("a");
-        assertEquals("bcbccb", sb.toString());
-        sb.deleteAll("c");
-        assertEquals("bbb", sb.toString());
-        sb.deleteAll("b");
-        assertEquals("", sb.toString());
-
-        sb = new StrBuilder("abcbccba");
-        sb.deleteAll("bc");
-        assertEquals("acba", sb.toString());
-
-        sb = new StrBuilder("");
-        sb.deleteAll("bc");
-        assertEquals("", sb.toString());
-    }
+	public void testDeleteFirst_char() {
+		this.strBuilderTestTestDeleteTemplate(new StrBuilderTestTestDeleteFirst_charAdapterImpl(), "abcba", "abcba",
+				"bcba", "bba", "ba");
+	}
 
     @Test
-    public void testDeleteFirst_String() {
-        StrBuilder sb = new StrBuilder("abcbccba");
-        sb.deleteFirst((String) null);
-        assertEquals("abcbccba", sb.toString());
-        sb.deleteFirst("");
-        assertEquals("abcbccba", sb.toString());
-
-        sb.deleteFirst("X");
-        assertEquals("abcbccba", sb.toString());
-        sb.deleteFirst("a");
-        assertEquals("bcbccba", sb.toString());
-        sb.deleteFirst("c");
-        assertEquals("bbccba", sb.toString());
-        sb.deleteFirst("b");
-        assertEquals("bccba", sb.toString());
-
-        sb = new StrBuilder("abcbccba");
-        sb.deleteFirst("bc");
-        assertEquals("abccba", sb.toString());
-
-        sb = new StrBuilder("");
-        sb.deleteFirst("bc");
-        assertEquals("", sb.toString());
-    }
-
-    // -----------------------------------------------------------------------
-    @Test
-    public void testDeleteAll_StrMatcher() {
-        StrBuilder sb = new StrBuilder("A0xA1A2yA3");
-        sb.deleteAll((StrMatcher) null);
-        assertEquals("A0xA1A2yA3", sb.toString());
-        sb.deleteAll(A_NUMBER_MATCHER);
-        assertEquals("xy", sb.toString());
-
-        sb = new StrBuilder("Ax1");
-        sb.deleteAll(A_NUMBER_MATCHER);
-        assertEquals("Ax1", sb.toString());
-
-        sb = new StrBuilder("");
-        sb.deleteAll(A_NUMBER_MATCHER);
-        assertEquals("", sb.toString());
-    }
+	public void testDeleteAll_String() {
+		this.strBuilderTestTestDeleteStringTemplate(new StrBuilderTestTestDeleteAll_StringAdapterImpl(), "bcbccb",
+				"bbb", "", "acba");
+	}
 
     @Test
-    public void testDeleteFirst_StrMatcher() {
-        StrBuilder sb = new StrBuilder("A0xA1A2yA3");
-        sb.deleteFirst((StrMatcher) null);
-        assertEquals("A0xA1A2yA3", sb.toString());
-        sb.deleteFirst(A_NUMBER_MATCHER);
-        assertEquals("xA1A2yA3", sb.toString());
+	public void testDeleteFirst_String() {
+		this.strBuilderTestTestDeleteStringTemplate(new StrBuilderTestTestDeleteFirst_StringAdapterImpl(), "bcbccba",
+				"bbccba", "bccba", "abccba");
+	}
 
-        sb = new StrBuilder("Ax1");
-        sb.deleteFirst(A_NUMBER_MATCHER);
-        assertEquals("Ax1", sb.toString());
+    @Test
+	public void testDeleteAll_StrMatcher() {
+		this.strBuilderTestTestDeleteStrMatcherTemplate(new StrBuilderTestTestDeleteAll_StrMatcherAdapterImpl(), "xy");
+	}
 
-        sb = new StrBuilder("");
-        sb.deleteFirst(A_NUMBER_MATCHER);
-        assertEquals("", sb.toString());
-    }
+    @Test
+	public void testDeleteFirst_StrMatcher() {
+		this.strBuilderTestTestDeleteStrMatcherTemplate(new StrBuilderTestTestDeleteFirst_StrMatcherAdapterImpl(),
+				"xA1A2yA3");
+	}
 
     // -----------------------------------------------------------------------
     @Test
@@ -776,98 +672,30 @@ public class StrBuilderTest {
         } catch (final IndexOutOfBoundsException e) {}
     }
 
-    //-----------------------------------------------------------------------
     @Test
-    public void testReplaceAll_char_char() {
-        final StrBuilder sb = new StrBuilder("abcbccba");
-        sb.replaceAll('x', 'y');
-        assertEquals("abcbccba", sb.toString());
-        sb.replaceAll('a', 'd');
-        assertEquals("dbcbccbd", sb.toString());
-        sb.replaceAll('b', 'e');
-        assertEquals("dececced", sb.toString());
-        sb.replaceAll('c', 'f');
-        assertEquals("defeffed", sb.toString());
-        sb.replaceAll('d', 'd');
-        assertEquals("defeffed", sb.toString());
-    }
-
-    //-----------------------------------------------------------------------
-    @Test
-    public void testReplaceFirst_char_char() {
-        final StrBuilder sb = new StrBuilder("abcbccba");
-        sb.replaceFirst('x', 'y');
-        assertEquals("abcbccba", sb.toString());
-        sb.replaceFirst('a', 'd');
-        assertEquals("dbcbccba", sb.toString());
-        sb.replaceFirst('b', 'e');
-        assertEquals("decbccba", sb.toString());
-        sb.replaceFirst('c', 'f');
-        assertEquals("defbccba", sb.toString());
-        sb.replaceFirst('d', 'd');
-        assertEquals("defbccba", sb.toString());
-    }
-
-    //-----------------------------------------------------------------------
-    @Test
-    public void testReplaceAll_String_String() {
-        StrBuilder sb = new StrBuilder("abcbccba");
-        sb.replaceAll((String) null, null);
-        assertEquals("abcbccba", sb.toString());
-        sb.replaceAll((String) null, "anything");
-        assertEquals("abcbccba", sb.toString());
-        sb.replaceAll("", null);
-        assertEquals("abcbccba", sb.toString());
-        sb.replaceAll("", "anything");
-        assertEquals("abcbccba", sb.toString());
-
-        sb.replaceAll("x", "y");
-        assertEquals("abcbccba", sb.toString());
-        sb.replaceAll("a", "d");
-        assertEquals("dbcbccbd", sb.toString());
-        sb.replaceAll("d", null);
-        assertEquals("bcbccb", sb.toString());
-        sb.replaceAll("cb", "-");
-        assertEquals("b-c-", sb.toString());
-
-        sb = new StrBuilder("abcba");
-        sb.replaceAll("b", "xbx");
-        assertEquals("axbxcxbxa", sb.toString());
-
-        sb = new StrBuilder("bb");
-        sb.replaceAll("b", "xbx");
-        assertEquals("xbxxbx", sb.toString());
-    }
+	public void testReplaceAll_char_char() {
+		this.strBuilderTestTestReplaceTemplate(new StrBuilderTestTestReplaceAll_char_charAdapterImpl(), "dbcbccbd",
+				"dececced", "defeffed", "defeffed");
+	}
 
     @Test
-    public void testReplaceFirst_String_String() {
-        StrBuilder sb = new StrBuilder("abcbccba");
-        sb.replaceFirst((String) null, null);
-        assertEquals("abcbccba", sb.toString());
-        sb.replaceFirst((String) null, "anything");
-        assertEquals("abcbccba", sb.toString());
-        sb.replaceFirst("", null);
-        assertEquals("abcbccba", sb.toString());
-        sb.replaceFirst("", "anything");
-        assertEquals("abcbccba", sb.toString());
+	public void testReplaceFirst_char_char() {
+		this.strBuilderTestTestReplaceTemplate(new StrBuilderTestTestReplaceFirst_char_charAdapterImpl(), "dbcbccba",
+				"decbccba", "defbccba", "defbccba");
+	}
 
-        sb.replaceFirst("x", "y");
-        assertEquals("abcbccba", sb.toString());
-        sb.replaceFirst("a", "d");
-        assertEquals("dbcbccba", sb.toString());
-        sb.replaceFirst("d", null);
-        assertEquals("bcbccba", sb.toString());
-        sb.replaceFirst("cb", "-");
-        assertEquals("b-ccba", sb.toString());
+    @Test
+	public void testReplaceAll_String_String() {
+		this.strBuilderTestTestReplaceString_StringTemplate(new StrBuilderTestTestReplaceAll_String_StringAdapterImpl(),
+				"dbcbccbd", "bcbccb", "b-c-", "axbxcxbxa", "xbxxbx");
+	}
 
-        sb = new StrBuilder("abcba");
-        sb.replaceFirst("b", "xbx");
-        assertEquals("axbxcba", sb.toString());
-
-        sb = new StrBuilder("bb");
-        sb.replaceFirst("b", "xbx");
-        assertEquals("xbxb", sb.toString());
-    }
+    @Test
+	public void testReplaceFirst_String_String() {
+		this.strBuilderTestTestReplaceString_StringTemplate(
+				new StrBuilderTestTestReplaceFirst_String_StringAdapterImpl(), "dbcbccba", "bcbccba", "b-ccba",
+				"axbxcba", "xbxb");
+	}
 
     //-----------------------------------------------------------------------
     @Test
@@ -1286,22 +1114,14 @@ public class StrBuilderTest {
     }
 
     @Test
-    public void testRightString() {
-        final StrBuilder sb = new StrBuilder("left right");
-        assertEquals("right", sb.rightString(5));
-        assertEquals("", sb.rightString(0));
-        assertEquals("", sb.rightString(-5));
-        assertEquals("left right", sb.rightString(15));
-    }
+	public void testRightString() {
+		this.strBuilderTestTestStringTemplate(new StrBuilderTestTestRightStringAdapterImpl(), "right", 5);
+	}
 
     @Test
-    public void testLeftString() {
-        final StrBuilder sb = new StrBuilder("left right");
-        assertEquals("left", sb.leftString(4));
-        assertEquals("", sb.leftString(0));
-        assertEquals("", sb.leftString(-5));
-        assertEquals("left right", sb.leftString(15));
-    }
+	public void testLeftString() {
+		this.strBuilderTestTestStringTemplate(new StrBuilderTestTestLeftStringAdapterImpl(), "left", 4);
+	}
 
     // -----------------------------------------------------------------------
     @Test
@@ -1338,20 +1158,10 @@ public class StrBuilderTest {
         assertTrue(sb.contains(A_NUMBER_MATCHER));
     }
 
-    // -----------------------------------------------------------------------
     @Test
-    public void testIndexOf_char() {
-        final StrBuilder sb = new StrBuilder("abab");
-        assertEquals(0, sb.indexOf('a'));
-
-        // should work like String#indexOf
-        assertEquals("abab".indexOf('a'), sb.indexOf('a'));
-
-        assertEquals(1, sb.indexOf('b'));
-        assertEquals("abab".indexOf('b'), sb.indexOf('b'));
-
-        assertEquals(-1, sb.indexOf('z'));
-    }
+	public void testIndexOf_char() {
+		this.strBuilderTestTestIndexOf_charTemplate(new StrBuilderTestTestIndexOf_charAdapterImpl(), 0, 1);
+	}
 
     @Test
     public void testIndexOf_char_int() {
@@ -1376,18 +1186,9 @@ public class StrBuilderTest {
     }
 
     @Test
-    public void testLastIndexOf_char() {
-        final StrBuilder sb = new StrBuilder("abab");
-
-        assertEquals (2, sb.lastIndexOf('a'));
-        //should work like String#lastIndexOf
-        assertEquals ("abab".lastIndexOf('a'), sb.lastIndexOf('a'));
-
-        assertEquals(3, sb.lastIndexOf('b'));
-        assertEquals ("abab".lastIndexOf('b'), sb.lastIndexOf('b'));
-
-        assertEquals (-1, sb.lastIndexOf('z'));
-    }
+	public void testLastIndexOf_char() {
+		this.strBuilderTestTestIndexOf_charTemplate(new StrBuilderTestTestLastIndexOf_charAdapterImpl(), 2, 3);
+	}
 
     @Test
     public void testLastIndexOf_char_int() {
@@ -1409,29 +1210,10 @@ public class StrBuilderTest {
         assertEquals(-1, sb.lastIndexOf('z', 1));
     }
 
-    // -----------------------------------------------------------------------
     @Test
-    public void testIndexOf_String() {
-        final StrBuilder sb = new StrBuilder("abab");
-
-        assertEquals(0, sb.indexOf("a"));
-        //should work like String#indexOf
-        assertEquals("abab".indexOf("a"), sb.indexOf("a"));
-
-        assertEquals(0, sb.indexOf("ab"));
-        //should work like String#indexOf
-        assertEquals("abab".indexOf("ab"), sb.indexOf("ab"));
-
-        assertEquals(1, sb.indexOf("b"));
-        assertEquals("abab".indexOf("b"), sb.indexOf("b"));
-
-        assertEquals(1, sb.indexOf("ba"));
-        assertEquals("abab".indexOf("ba"), sb.indexOf("ba"));
-
-        assertEquals(-1, sb.indexOf("z"));
-
-        assertEquals(-1, sb.indexOf((String) null));
-    }
+	public void testIndexOf_String() {
+		this.strBuilderTestTestIndexOf_StringTemplate(new StrBuilderTestTestIndexOf_StringAdapterImpl(), 0, 0, 1);
+	}
 
     @Test
     public void testIndexOf_String_int() {
@@ -1471,27 +1253,9 @@ public class StrBuilderTest {
     }
 
     @Test
-    public void testLastIndexOf_String() {
-        final StrBuilder sb = new StrBuilder("abab");
-
-        assertEquals(2, sb.lastIndexOf("a"));
-        //should work like String#lastIndexOf
-        assertEquals("abab".lastIndexOf("a"), sb.lastIndexOf("a"));
-
-        assertEquals(2, sb.lastIndexOf("ab"));
-        //should work like String#lastIndexOf
-        assertEquals("abab".lastIndexOf("ab"), sb.lastIndexOf("ab"));
-
-        assertEquals(3, sb.lastIndexOf("b"));
-        assertEquals("abab".lastIndexOf("b"), sb.lastIndexOf("b"));
-
-        assertEquals(1, sb.lastIndexOf("ba"));
-        assertEquals("abab".lastIndexOf("ba"), sb.lastIndexOf("ba"));
-
-        assertEquals(-1, sb.lastIndexOf("z"));
-
-        assertEquals(-1, sb.lastIndexOf((String) null));
-    }
+	public void testLastIndexOf_String() {
+		this.strBuilderTestTestIndexOf_StringTemplate(new StrBuilderTestTestLastIndexOf_StringAdapterImpl(), 2, 2, 3);
+	}
 
     @Test
     public void testLastIndexOf_String_int() {
@@ -1530,24 +1294,10 @@ public class StrBuilderTest {
         assertEquals(-1, sb.lastIndexOf((String) null, 2));
     }
 
-    // -----------------------------------------------------------------------
     @Test
-    public void testIndexOf_StrMatcher() {
-        final StrBuilder sb = new StrBuilder();
-        assertEquals(-1, sb.indexOf((StrMatcher) null));
-        assertEquals(-1, sb.indexOf(StrMatcher.charMatcher('a')));
-
-        sb.append("ab bd");
-        assertEquals(0, sb.indexOf(StrMatcher.charMatcher('a')));
-        assertEquals(1, sb.indexOf(StrMatcher.charMatcher('b')));
-        assertEquals(2, sb.indexOf(StrMatcher.spaceMatcher()));
-        assertEquals(4, sb.indexOf(StrMatcher.charMatcher('d')));
-        assertEquals(-1, sb.indexOf(StrMatcher.noneMatcher()));
-        assertEquals(-1, sb.indexOf((StrMatcher) null));
-
-        sb.append(" A1 junction");
-        assertEquals(6, sb.indexOf(A_NUMBER_MATCHER));
-    }
+	public void testIndexOf_StrMatcher() {
+		this.strBuilderTestTestIndexOf_StrMatcherTemplate(new StrBuilderTestTestIndexOf_StrMatcherAdapterImpl(), 1);
+	}
 
     @Test
     public void testIndexOf_StrMatcher_int() {
@@ -1590,22 +1340,9 @@ public class StrBuilderTest {
     }
 
     @Test
-    public void testLastIndexOf_StrMatcher() {
-        final StrBuilder sb = new StrBuilder();
-        assertEquals(-1, sb.lastIndexOf((StrMatcher) null));
-        assertEquals(-1, sb.lastIndexOf(StrMatcher.charMatcher('a')));
-
-        sb.append("ab bd");
-        assertEquals(0, sb.lastIndexOf(StrMatcher.charMatcher('a')));
-        assertEquals(3, sb.lastIndexOf(StrMatcher.charMatcher('b')));
-        assertEquals(2, sb.lastIndexOf(StrMatcher.spaceMatcher()));
-        assertEquals(4, sb.lastIndexOf(StrMatcher.charMatcher('d')));
-        assertEquals(-1, sb.lastIndexOf(StrMatcher.noneMatcher()));
-        assertEquals(-1, sb.lastIndexOf((StrMatcher) null));
-
-        sb.append(" A1 junction");
-        assertEquals(6, sb.lastIndexOf(A_NUMBER_MATCHER));
-    }
+	public void testLastIndexOf_StrMatcher() {
+		this.strBuilderTestTestIndexOf_StrMatcherTemplate(new StrBuilderTestTestLastIndexOf_StrMatcherAdapterImpl(), 3);
+	}
 
     @Test
     public void testLastIndexOf_StrMatcher_int() {
@@ -1887,25 +1624,16 @@ public class StrBuilderTest {
         assertEquals("abc", sb.toString());
     }
 
-    //-----------------------------------------------------------------------
     @Test
-    public void testToStringBuffer() {
-        final StrBuilder sb = new StrBuilder();
-        assertEquals(new StringBuffer().toString(), sb.toStringBuffer().toString());
+	public void testToStringBuffer() throws Exception {
+		this.strBuilderTestTestToStringTemplate(new StrBuilderTestTestToStringBufferAdapterImpl(), StringBuffer.class);
+	}
 
-        sb.append("junit");
-        assertEquals(new StringBuffer("junit").toString(), sb.toStringBuffer().toString());
-    }
-
-    //-----------------------------------------------------------------------
     @Test
-    public void testToStringBuilder() {
-        final StrBuilder sb = new StrBuilder();
-        assertEquals(new StringBuilder().toString(), sb.toStringBuilder().toString());
-
-        sb.append("junit");
-        assertEquals(new StringBuilder("junit").toString(), sb.toStringBuilder().toString());
-    }
+	public void testToStringBuilder() throws Exception {
+		this.strBuilderTestTestToStringTemplate(new StrBuilderTestTestToStringBuilderAdapterImpl(),
+				StringBuilder.class);
+	}
 
     //-----------------------------------------------------------------------
     @Test
@@ -2011,4 +1739,350 @@ public class StrBuilderTest {
         buffer.flip();
         assertEquals("Test 1234567890", buffer.toString());
     }
+
+	public void strBuilderTestTestReplaceString_StringTemplate(StrBuilderTestTestReplaceString_StringAdapter adapter,
+			String string1, String string2, String string3, String string4, String string5) {
+		StrBuilder sb = new StrBuilder("abcbccba");
+		adapter.replace(sb, (String) null, null);
+		assertEquals("abcbccba", sb.toString());
+		adapter.replace(sb, (String) null, "anything");
+		assertEquals("abcbccba", sb.toString());
+		adapter.replace(sb, "", null);
+		assertEquals("abcbccba", sb.toString());
+		adapter.replace(sb, "", "anything");
+		assertEquals("abcbccba", sb.toString());
+		adapter.replace(sb, "x", "y");
+		assertEquals("abcbccba", sb.toString());
+		adapter.replace(sb, "a", "d");
+		assertEquals(string1, sb.toString());
+		adapter.replace(sb, "d", null);
+		assertEquals(string2, sb.toString());
+		adapter.replace(sb, "cb", "-");
+		assertEquals(string3, sb.toString());
+		sb = new StrBuilder("abcba");
+		adapter.replace(sb, "b", "xbx");
+		assertEquals(string4, sb.toString());
+		sb = new StrBuilder("bb");
+		adapter.replace(sb, "b", "xbx");
+		assertEquals(string5, sb.toString());
+	}
+
+	interface StrBuilderTestTestReplaceString_StringAdapter {
+		StrBuilder replace(StrBuilder strBuilder1, String string1, String string2);
+	}
+
+	class StrBuilderTestTestReplaceAll_String_StringAdapterImpl
+			implements StrBuilderTestTestReplaceString_StringAdapter {
+		public StrBuilder replace(StrBuilder sb, String string1, String string2) {
+			return sb.replaceAll(string1, string2);
+		}
+	}
+
+	class StrBuilderTestTestReplaceFirst_String_StringAdapterImpl
+			implements StrBuilderTestTestReplaceString_StringAdapter {
+		public StrBuilder replace(StrBuilder sb, String string1, String string2) {
+			return sb.replaceFirst(string1, string2);
+		}
+	}
+
+	public void strBuilderTestTestDeleteStringTemplate(StrBuilderTestTestDeleteStringAdapter adapter, String string1,
+			String string2, String string3, String string4) {
+		StrBuilder sb = new StrBuilder("abcbccba");
+		adapter.delete(sb, (String) null);
+		assertEquals("abcbccba", sb.toString());
+		adapter.delete(sb, "");
+		assertEquals("abcbccba", sb.toString());
+		adapter.delete(sb, "X");
+		assertEquals("abcbccba", sb.toString());
+		adapter.delete(sb, "a");
+		assertEquals(string1, sb.toString());
+		adapter.delete(sb, "c");
+		assertEquals(string2, sb.toString());
+		adapter.delete(sb, "b");
+		assertEquals(string3, sb.toString());
+		sb = new StrBuilder("abcbccba");
+		adapter.delete(sb, "bc");
+		assertEquals(string4, sb.toString());
+		sb = new StrBuilder("");
+		adapter.delete(sb, "bc");
+		assertEquals("", sb.toString());
+	}
+
+	interface StrBuilderTestTestDeleteStringAdapter {
+		StrBuilder delete(StrBuilder strBuilder1, String string1);
+	}
+
+	class StrBuilderTestTestDeleteAll_StringAdapterImpl implements StrBuilderTestTestDeleteStringAdapter {
+		public StrBuilder delete(StrBuilder sb, String string1) {
+			return sb.deleteAll(string1);
+		}
+	}
+
+	class StrBuilderTestTestDeleteFirst_StringAdapterImpl implements StrBuilderTestTestDeleteStringAdapter {
+		public StrBuilder delete(StrBuilder sb, String string1) {
+			return sb.deleteFirst(string1);
+		}
+	}
+
+	public void strBuilderTestTestIndexOf_StringTemplate(StrBuilderTestTestIndexOf_StringAdapter adapter, int i1,
+			int i2, int i3) {
+		final StrBuilder sb = new StrBuilder("abab");
+		assertEquals(i1, adapter.indexOf(sb, "a"));
+		assertEquals(adapter.indexOf1("abab", "a"), adapter.indexOf(sb, "a"));
+		assertEquals(i2, adapter.indexOf(sb, "ab"));
+		assertEquals(adapter.indexOf1("abab", "ab"), adapter.indexOf(sb, "ab"));
+		assertEquals(i3, adapter.indexOf(sb, "b"));
+		assertEquals(adapter.indexOf1("abab", "b"), adapter.indexOf(sb, "b"));
+		assertEquals(1, adapter.indexOf(sb, "ba"));
+		assertEquals(adapter.indexOf1("abab", "ba"), adapter.indexOf(sb, "ba"));
+		assertEquals(-1, adapter.indexOf(sb, "z"));
+		assertEquals(-1, adapter.indexOf(sb, (String) null));
+	}
+
+	interface StrBuilderTestTestIndexOf_StringAdapter {
+		int indexOf(StrBuilder strBuilder1, String string1);
+
+		int indexOf1(String string1, String string2);
+	}
+
+	class StrBuilderTestTestIndexOf_StringAdapterImpl implements StrBuilderTestTestIndexOf_StringAdapter {
+		public int indexOf(StrBuilder sb, String string1) {
+			return sb.indexOf(string1);
+		}
+
+		public int indexOf1(String string1, String string2) {
+			return string1.indexOf(string2);
+		}
+	}
+
+	class StrBuilderTestTestLastIndexOf_StringAdapterImpl implements StrBuilderTestTestIndexOf_StringAdapter {
+		public int indexOf(StrBuilder sb, String string1) {
+			return sb.lastIndexOf(string1);
+		}
+
+		public int indexOf1(String string1, String string2) {
+			return string1.lastIndexOf(string2);
+		}
+	}
+
+	public void strBuilderTestTestIndexOf_StrMatcherTemplate(StrBuilderTestTestIndexOf_StrMatcherAdapter adapter,
+			int i1) {
+		final StrBuilder sb = new StrBuilder();
+		assertEquals(-1, adapter.indexOf(sb, (StrMatcher) null));
+		assertEquals(-1, adapter.indexOf(sb, StrMatcher.charMatcher('a')));
+		sb.append("ab bd");
+		assertEquals(0, adapter.indexOf(sb, StrMatcher.charMatcher('a')));
+		assertEquals(i1, adapter.indexOf(sb, StrMatcher.charMatcher('b')));
+		assertEquals(2, adapter.indexOf(sb, StrMatcher.spaceMatcher()));
+		assertEquals(4, adapter.indexOf(sb, StrMatcher.charMatcher('d')));
+		assertEquals(-1, adapter.indexOf(sb, StrMatcher.noneMatcher()));
+		assertEquals(-1, adapter.indexOf(sb, (StrMatcher) null));
+		sb.append(" A1 junction");
+		assertEquals(6, adapter.indexOf(sb, A_NUMBER_MATCHER));
+	}
+
+	interface StrBuilderTestTestIndexOf_StrMatcherAdapter {
+		int indexOf(StrBuilder strBuilder1, StrMatcher strMatcher1);
+	}
+
+	class StrBuilderTestTestIndexOf_StrMatcherAdapterImpl implements StrBuilderTestTestIndexOf_StrMatcherAdapter {
+		public int indexOf(StrBuilder sb, StrMatcher strMatcher1) {
+			return sb.indexOf(strMatcher1);
+		}
+	}
+
+	class StrBuilderTestTestLastIndexOf_StrMatcherAdapterImpl implements StrBuilderTestTestIndexOf_StrMatcherAdapter {
+		public int indexOf(StrBuilder sb, StrMatcher strMatcher1) {
+			return sb.lastIndexOf(strMatcher1);
+		}
+	}
+
+	public void strBuilderTestTestDeleteStrMatcherTemplate(StrBuilderTestTestDeleteStrMatcherAdapter adapter,
+			String string1) {
+		StrBuilder sb = new StrBuilder("A0xA1A2yA3");
+		adapter.delete(sb, (StrMatcher) null);
+		assertEquals("A0xA1A2yA3", sb.toString());
+		adapter.delete(sb, A_NUMBER_MATCHER);
+		assertEquals(string1, sb.toString());
+		sb = new StrBuilder("Ax1");
+		adapter.delete(sb, A_NUMBER_MATCHER);
+		assertEquals("Ax1", sb.toString());
+		sb = new StrBuilder("");
+		adapter.delete(sb, A_NUMBER_MATCHER);
+		assertEquals("", sb.toString());
+	}
+
+	interface StrBuilderTestTestDeleteStrMatcherAdapter {
+		StrBuilder delete(StrBuilder strBuilder1, StrMatcher strMatcher1);
+	}
+
+	class StrBuilderTestTestDeleteAll_StrMatcherAdapterImpl implements StrBuilderTestTestDeleteStrMatcherAdapter {
+		public StrBuilder delete(StrBuilder sb, StrMatcher strMatcher1) {
+			return sb.deleteAll(strMatcher1);
+		}
+	}
+
+	class StrBuilderTestTestDeleteFirst_StrMatcherAdapterImpl implements StrBuilderTestTestDeleteStrMatcherAdapter {
+		public StrBuilder delete(StrBuilder sb, StrMatcher strMatcher1) {
+			return sb.deleteFirst(strMatcher1);
+		}
+	}
+
+	public void strBuilderTestTestDeleteTemplate(StrBuilderTestTestDeleteAdapter adapter, String string1,
+			String string2, String string3, String string4, String string5) {
+		StrBuilder sb = new StrBuilder(string1);
+		adapter.delete(sb, 'X');
+		assertEquals(string2, sb.toString());
+		adapter.delete(sb, 'a');
+		assertEquals(string3, sb.toString());
+		adapter.delete(sb, 'c');
+		assertEquals(string4, sb.toString());
+		adapter.delete(sb, 'b');
+		assertEquals(string5, sb.toString());
+		sb = new StrBuilder("");
+		adapter.delete(sb, 'b');
+		assertEquals("", sb.toString());
+	}
+
+	interface StrBuilderTestTestDeleteAdapter {
+		StrBuilder delete(StrBuilder strBuilder1, char c1);
+	}
+
+	class StrBuilderTestTestDeleteAll_charAdapterImpl implements StrBuilderTestTestDeleteAdapter {
+		public StrBuilder delete(StrBuilder sb, char c1) {
+			return sb.deleteAll(c1);
+		}
+	}
+
+	class StrBuilderTestTestDeleteFirst_charAdapterImpl implements StrBuilderTestTestDeleteAdapter {
+		public StrBuilder delete(StrBuilder sb, char c1) {
+			return sb.deleteFirst(c1);
+		}
+	}
+
+	public void strBuilderTestTestReplaceTemplate(StrBuilderTestTestReplaceAdapter adapter, String string1,
+			String string2, String string3, String string4) {
+		final StrBuilder sb = new StrBuilder("abcbccba");
+		adapter.replace(sb, 'x', 'y');
+		assertEquals("abcbccba", sb.toString());
+		adapter.replace(sb, 'a', 'd');
+		assertEquals(string1, sb.toString());
+		adapter.replace(sb, 'b', 'e');
+		assertEquals(string2, sb.toString());
+		adapter.replace(sb, 'c', 'f');
+		assertEquals(string3, sb.toString());
+		adapter.replace(sb, 'd', 'd');
+		assertEquals(string4, sb.toString());
+	}
+
+	interface StrBuilderTestTestReplaceAdapter {
+		StrBuilder replace(StrBuilder strBuilder1, char c1, char c2);
+	}
+
+	class StrBuilderTestTestReplaceAll_char_charAdapterImpl implements StrBuilderTestTestReplaceAdapter {
+		public StrBuilder replace(StrBuilder sb, char c1, char c2) {
+			return sb.replaceAll(c1, c2);
+		}
+	}
+
+	class StrBuilderTestTestReplaceFirst_char_charAdapterImpl implements StrBuilderTestTestReplaceAdapter {
+		public StrBuilder replace(StrBuilder sb, char c1, char c2) {
+			return sb.replaceFirst(c1, c2);
+		}
+	}
+
+	public <TObject> void strBuilderTestTestReadFromTemplate(Class<TObject> clazzTObject) throws Exception {
+		String s = "";
+		for (int i = 0; i < 100; ++i) {
+			final StrBuilder sb = new StrBuilder();
+			final int len = sb.readFrom((Readable) clazzTObject.getDeclaredConstructor(String.class).newInstance(s));
+			assertEquals(s.length(), len);
+			assertEquals(s, sb.toString());
+			s += Integer.toString(i);
+		}
+	}
+
+	public void strBuilderTestTestIndexOf_charTemplate(StrBuilderTestTestIndexOf_charAdapter adapter, int i1, int i2) {
+		final StrBuilder sb = new StrBuilder("abab");
+		assertEquals(i1, adapter.indexOf(sb, 'a'));
+		assertEquals(adapter.indexOf1("abab", 'a'), adapter.indexOf(sb, 'a'));
+		assertEquals(i2, adapter.indexOf(sb, 'b'));
+		assertEquals(adapter.indexOf1("abab", 'b'), adapter.indexOf(sb, 'b'));
+		assertEquals(-1, adapter.indexOf(sb, 'z'));
+	}
+
+	interface StrBuilderTestTestIndexOf_charAdapter {
+		int indexOf(StrBuilder strBuilder1, char c1);
+
+		int indexOf1(String string1, int i1);
+	}
+
+	class StrBuilderTestTestIndexOf_charAdapterImpl implements StrBuilderTestTestIndexOf_charAdapter {
+		public int indexOf(StrBuilder sb, char c1) {
+			return sb.indexOf(c1);
+		}
+
+		public int indexOf1(String string1, int i1) {
+			return string1.indexOf(i1);
+		}
+	}
+
+	class StrBuilderTestTestLastIndexOf_charAdapterImpl implements StrBuilderTestTestIndexOf_charAdapter {
+		public int indexOf(StrBuilder sb, char c1) {
+			return sb.lastIndexOf(c1);
+		}
+
+		public int indexOf1(String string1, int i1) {
+			return string1.lastIndexOf(i1);
+		}
+	}
+
+	public <TString> void strBuilderTestTestToStringTemplate(StrBuilderTestTestToStringAdapter<TString> adapter,
+			Class<TString> clazzTString) throws Exception {
+		final StrBuilder sb = new StrBuilder();
+		assertEquals(clazzTString.newInstance().toString(), adapter.toString(sb).toString());
+		sb.append("junit");
+		assertEquals(clazzTString.getDeclaredConstructor(String.class).newInstance("junit").toString(),
+				adapter.toString(sb).toString());
+	}
+
+	interface StrBuilderTestTestToStringAdapter<TString> {
+		TString toString(StrBuilder strBuilder1);
+	}
+
+	class StrBuilderTestTestToStringBufferAdapterImpl implements StrBuilderTestTestToStringAdapter<StringBuffer> {
+		public StringBuffer toString(StrBuilder sb) {
+			return sb.toStringBuffer();
+		}
+	}
+
+	class StrBuilderTestTestToStringBuilderAdapterImpl implements StrBuilderTestTestToStringAdapter<StringBuilder> {
+		public StringBuilder toString(StrBuilder sb) {
+			return sb.toStringBuilder();
+		}
+	}
+
+	public void strBuilderTestTestStringTemplate(StrBuilderTestTestStringAdapter adapter, String string1, int i1) {
+		final StrBuilder sb = new StrBuilder("left right");
+		assertEquals(string1, adapter.string(sb, i1));
+		assertEquals("", adapter.string(sb, 0));
+		assertEquals("", adapter.string(sb, -5));
+		assertEquals("left right", adapter.string(sb, 15));
+	}
+
+	interface StrBuilderTestTestStringAdapter {
+		String string(StrBuilder strBuilder1, int i1);
+	}
+
+	class StrBuilderTestTestRightStringAdapterImpl implements StrBuilderTestTestStringAdapter {
+		public String string(StrBuilder sb, int i1) {
+			return sb.rightString(i1);
+		}
+	}
+
+	class StrBuilderTestTestLeftStringAdapterImpl implements StrBuilderTestTestStringAdapter {
+		public String string(StrBuilder sb, int i1) {
+			return sb.leftString(i1);
+		}
+	}
 }

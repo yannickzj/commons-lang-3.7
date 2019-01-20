@@ -70,15 +70,9 @@ public class MutablePairTest {
     }
 
     @Test
-    public void testEquals() throws Exception {
-        assertEquals(MutablePair.of(null, "foo"), MutablePair.of(null, "foo"));
-        assertFalse(MutablePair.of("foo", 0).equals(MutablePair.of("foo", null)));
-        assertFalse(MutablePair.of("foo", "bar").equals(MutablePair.of("xyz", "bar")));
-
-        final MutablePair<String, String> p = MutablePair.of("foo", "bar");
-        assertTrue(p.equals(p));
-        assertFalse(p.equals(new Object()));
-    }
+	public void testEquals() throws Exception {
+		PairTestTestEqualsTemplate.<MutablePair<String, String>>pairTestTestEqualsTemplate();
+	}
 
     @Test
     public void testHashCode() throws Exception {
@@ -86,12 +80,9 @@ public class MutablePairTest {
     }
 
     @Test
-    public void testToString() throws Exception {
-        assertEquals("(null,null)", MutablePair.of(null, null).toString());
-        assertEquals("(null,two)", MutablePair.of(null, "two").toString());
-        assertEquals("(one,null)", MutablePair.of("one", null).toString());
-        assertEquals("(one,two)", MutablePair.of("one", "two").toString());
-    }
+	public void testToString() throws Exception {
+		PairTestTestToStringTemplate.pairTestTestToStringTemplate();
+	}
 
     @Test
     @SuppressWarnings("unchecked")

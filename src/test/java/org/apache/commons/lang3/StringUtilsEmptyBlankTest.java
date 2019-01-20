@@ -16,6 +16,7 @@
  */
 package org.apache.commons.lang3;
 
+import java.lang.CharSequence;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -45,28 +46,14 @@ public class StringUtilsEmptyBlankTest  {
     }
 
     @Test
-    public void testIsAnyEmpty() {
-        assertTrue(StringUtils.isAnyEmpty((String) null));
-        assertFalse(StringUtils.isAnyEmpty((String[]) null));
-        assertTrue(StringUtils.isAnyEmpty(null, "foo"));
-        assertTrue(StringUtils.isAnyEmpty("", "bar"));
-        assertTrue(StringUtils.isAnyEmpty("bob", ""));
-        assertTrue(StringUtils.isAnyEmpty("  bob  ", null));
-        assertFalse(StringUtils.isAnyEmpty(" ", "bar"));
-        assertFalse(StringUtils.isAnyEmpty("foo", "bar"));
-    }
+	public void testIsAnyEmpty() {
+		this.stringUtilsEmptyBlankTestTestIsEmptyTemplate(new StringUtilsEmptyBlankTestTestIsAnyEmptyAdapterImpl());
+	}
 
     @Test
-    public void testIsNoneEmpty() {
-        assertFalse(StringUtils.isNoneEmpty((String) null));
-        assertTrue(StringUtils.isNoneEmpty((String[]) null));
-        assertFalse(StringUtils.isNoneEmpty(null, "foo"));
-        assertFalse(StringUtils.isNoneEmpty("", "bar"));
-        assertFalse(StringUtils.isNoneEmpty("bob", ""));
-        assertFalse(StringUtils.isNoneEmpty("  bob  ", null));
-        assertTrue(StringUtils.isNoneEmpty(" ", "bar"));
-        assertTrue(StringUtils.isNoneEmpty("foo", "bar"));
-    }
+	public void testIsNoneEmpty() {
+		this.stringUtilsEmptyBlankTestTestIsEmptyTemplate(new StringUtilsEmptyBlankTestTestIsNoneEmptyAdapterImpl());
+	}
 
     @Test
     public void testIsAllEmpty() {
@@ -102,30 +89,14 @@ public class StringUtilsEmptyBlankTest  {
     }
 
     @Test
-    public void testIsAnyBlank() {
-        assertTrue(StringUtils.isAnyBlank((String) null));
-        assertFalse(StringUtils.isAnyBlank((String[]) null));
-        assertTrue(StringUtils.isAnyBlank(null, "foo"));
-        assertTrue(StringUtils.isAnyBlank(null, null));
-        assertTrue(StringUtils.isAnyBlank("", "bar"));
-        assertTrue(StringUtils.isAnyBlank("bob", ""));
-        assertTrue(StringUtils.isAnyBlank("  bob  ", null));
-        assertTrue(StringUtils.isAnyBlank(" ", "bar"));
-        assertFalse(StringUtils.isAnyBlank("foo", "bar"));
-    }
+	public void testIsAnyBlank() {
+		this.stringUtilsEmptyBlankTestTestIsBlankTemplate(new StringUtilsEmptyBlankTestTestIsAnyBlankAdapterImpl());
+	}
 
     @Test
-    public void testIsNoneBlank() {
-        assertFalse(StringUtils.isNoneBlank((String) null));
-        assertTrue(StringUtils.isNoneBlank((String[]) null));
-        assertFalse(StringUtils.isNoneBlank(null, "foo"));
-        assertFalse(StringUtils.isNoneBlank(null, null));
-        assertFalse(StringUtils.isNoneBlank("", "bar"));
-        assertFalse(StringUtils.isNoneBlank("bob", ""));
-        assertFalse(StringUtils.isNoneBlank("  bob  ", null));
-        assertFalse(StringUtils.isNoneBlank(" ", "bar"));
-        assertTrue(StringUtils.isNoneBlank("foo", "bar"));
-    }
+	public void testIsNoneBlank() {
+		this.stringUtilsEmptyBlankTestTestIsBlankTemplate(new StringUtilsEmptyBlankTestTestIsNoneBlankAdapterImpl());
+	}
 
     @Test
     public void testIsAllBlank() {
@@ -140,4 +111,99 @@ public class StringUtilsEmptyBlankTest  {
         assertFalse(StringUtils.isAllBlank(" ", "bar"));
         assertFalse(StringUtils.isAllBlank("foo", "bar"));
     }
+
+	public void stringUtilsEmptyBlankTestTestIsBlankTemplate(StringUtilsEmptyBlankTestTestIsBlankAdapter adapter) {
+		assertTrue(adapter.isBlank((String) null));
+		assertFalse(adapter.isBlank((String[]) null));
+		adapter.assertAction(adapter.isBlank(null, "foo"));
+		adapter.assertAction(adapter.isBlank(null, null));
+		adapter.assertAction(adapter.isBlank("", "bar"));
+		adapter.assertAction(adapter.isBlank("bob", ""));
+		adapter.assertAction(adapter.isBlank("  bob  ", null));
+		adapter.assertAction(adapter.isBlank(" ", "bar"));
+		adapter.assertAction1(adapter.isBlank("foo", "bar"));
+	}
+
+	interface StringUtilsEmptyBlankTestTestIsBlankAdapter {
+		boolean isBlank(CharSequence... charSequenceArray1);
+
+		void assertAction(boolean b1);
+
+		void assertAction1(boolean b1);
+	}
+
+	class StringUtilsEmptyBlankTestTestIsAnyBlankAdapterImpl implements StringUtilsEmptyBlankTestTestIsBlankAdapter {
+		public boolean isBlank(CharSequence... charSequence1) {
+			return StringUtils.isAnyBlank(charSequence1);
+		}
+
+		public void assertAction(boolean b1) {
+			assertTrue(b1);
+		}
+
+		public void assertAction1(boolean b1) {
+			assertFalse(b1);
+		}
+	}
+
+	class StringUtilsEmptyBlankTestTestIsNoneBlankAdapterImpl implements StringUtilsEmptyBlankTestTestIsBlankAdapter {
+		public boolean isBlank(CharSequence... charSequence1) {
+			return StringUtils.isNoneBlank(charSequence1);
+		}
+
+		public void assertAction(boolean b1) {
+			assertFalse(b1);
+		}
+
+		public void assertAction1(boolean b1) {
+			assertTrue(b1);
+		}
+	}
+
+	public void stringUtilsEmptyBlankTestTestIsEmptyTemplate(StringUtilsEmptyBlankTestTestIsEmptyAdapter adapter) {
+		assertTrue(adapter.isEmpty((String) null));
+		assertFalse(adapter.isEmpty((String[]) null));
+		adapter.assertAction(adapter.isEmpty(null, "foo"));
+		adapter.assertAction(adapter.isEmpty("", "bar"));
+		adapter.assertAction(adapter.isEmpty("bob", ""));
+		adapter.assertAction(adapter.isEmpty("  bob  ", null));
+		adapter.assertAction1(adapter.isEmpty(" ", "bar"));
+		adapter.assertAction1(adapter.isEmpty("foo", "bar"));
+	}
+
+	interface StringUtilsEmptyBlankTestTestIsEmptyAdapter {
+		boolean isEmpty(CharSequence... charSequenceArray1);
+
+		void assertAction(boolean b1);
+
+		void assertAction1(boolean b1);
+	}
+
+	class StringUtilsEmptyBlankTestTestIsAnyEmptyAdapterImpl implements StringUtilsEmptyBlankTestTestIsEmptyAdapter {
+		public boolean isEmpty(CharSequence... charSequence1) {
+			return StringUtils.isAnyEmpty(charSequence1);
+		}
+
+		public void assertAction(boolean b1) {
+			assertTrue(b1);
+		}
+
+		public void assertAction1(boolean b1) {
+			assertFalse(b1);
+		}
+	}
+
+	class StringUtilsEmptyBlankTestTestIsNoneEmptyAdapterImpl implements StringUtilsEmptyBlankTestTestIsEmptyAdapter {
+		public boolean isEmpty(CharSequence... charSequence1) {
+			return StringUtils.isNoneEmpty(charSequence1);
+		}
+
+		public void assertAction(boolean b1) {
+			assertFalse(b1);
+		}
+
+		public void assertAction1(boolean b1) {
+			assertTrue(b1);
+		}
+	}
 }
